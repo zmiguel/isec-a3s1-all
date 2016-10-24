@@ -28,7 +28,7 @@ int main(int argc, char *argv[]){
     printf("Eu sou o PID: %d...\n", getpid());
 
     if(argc!=3){
-        printf("[ERRO] nr. args! (=3)\n");
+        printf("[ERRO] Nr. args! (=3)\n");
         exit(7);
     }
     n = atoi(argv[1]);
