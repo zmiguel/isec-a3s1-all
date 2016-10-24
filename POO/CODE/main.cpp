@@ -3,6 +3,6 @@
 #include <iostream>
 #include <sstream>
 
-int main (void){
-    std::cout << "Hello World!" << std::endl;
+int main (){
+    printf("fuck off!\n");
 }
