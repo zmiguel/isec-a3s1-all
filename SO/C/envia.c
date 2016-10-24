@@ -6,6 +6,7 @@
 
 int main(int argc, char *argv[]){
     int p;
+    union sigval val;
     
     if(argc!=2){
         printf("[ERRO] nr. args! (=2)\n");
@@ -13,6 +14,7 @@ int main(int argc, char *argv[]){
     }
     p = atoi(argv[1]);
     printf("Vou enviar um SIGUSR1 ao PID: %d\n", p);
+    
     kill(p, SIGUSR1);
     
     exit(0);
