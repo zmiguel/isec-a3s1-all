@@ -4,5 +4,4 @@
 
 int main(void){
     printf("HELLO\n");
-    printf("fuck off");
 }
