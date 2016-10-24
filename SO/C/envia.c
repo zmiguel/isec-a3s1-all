@@ -7,12 +7,13 @@
 int main(int argc, char *argv[]){
     int p;
     
-    if(argc!=3){
-        printf("[ERRO] nr. args! (=3)\n");
+    if(argc!=2){
+        printf("[ERRO] nr. args! (=2)\n");
         exit(7);
     }
     p = atoi(argv[1]);
-    printf("Vou enviar um SIGUSR1 ao PID: %d", p)
+    printf("Vou enviar um SIGUSR1 ao PID: %d\n", p);
+    kill(p, SIGUSR1);
     
     exit(0);
 }
