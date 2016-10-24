@@ -10,6 +10,9 @@ void diz(int s){
     }else if(s==SIGUSR1){
         printf("Adeus!\n");
         exit(3);
+    }else if(s==SIGALRM){
+        write(1,"x", 1);
+        alarm(10);
     }
 
 }
@@ -19,6 +22,10 @@ int main(int argc, char *argv[]){
 
     signal(SIGINT, diz);
     signal(SIGUSR1, diz);
+    signal(SIGALRM, diz);
+    alarm(10);
+
+    printf("Eu sou o PID: %d...\n", getpid());
 
     if(argc!=3){
         printf("[ERRO] nr. args! (=3)\n");
