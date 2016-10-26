@@ -316,7 +316,7 @@ NIL
 0.0
 10.0
 true
-true
+false
 "" ""
 PENS
 "nr_sociais" 1.0 0 -2674135 true "" "plot count sociais"
