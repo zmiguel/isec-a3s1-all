@@ -1,11 +1,12 @@
 turtles-own[energia]
 breed [solitarios solitario]
 breed [sociais social]
-globals [gold]
+globals [gold sociabilidade]
 
 to Setup
   set gold 0
   clear-all
+  RESET-TICKS
   create-solitarios nr_solitario
   create-sociais nr_social
   Setup-patches
@@ -19,6 +20,7 @@ ask sociais
   [
   set size 1
   set color red
+  set sociabilidade 10
   ]
  ask turtles
  [
@@ -26,6 +28,7 @@ ask sociais
    set heading random 360
    set shape "person"
    set energia ener_inicial
+   set size 1.5
  ]
 
 
@@ -53,9 +56,61 @@ to Setup-patches
 end
 
 to Go
+  ask sociais[
+    forward 1
+    set energia (energia - 1)
+    if energia <= 0[
+      set pcolor red
+      die
+      ]
+    Comer_social
+  ]
 
+  ask solitarios[
+    forward 1
+    set energia (energia - 1)
+    if energia <= 0[
+      set pcolor grey
+      die
+      ]
+    Comer_solitario
+  ]
+
+  if(count turtles = 0)[
+    stop
+  ]
+  tick
 end
 
+to Comer_social
+  if pcolor = green [
+    set pcolor black
+    set energia (energia + ener_alimento)
+  ]ifelse pcolor = blue[
+    set pcolor black
+    let luck random 5  ;; 1: aumentar em 10% energia // 2: +1% socia // 3: -1% socia // 4: mata se for menor que 50% socia
+    if luck = 1[
+      set energia (energia * 1.1)
+    ]ifelse luck = 2[
+      set sociabilidade (sociabilidade + 1)
+    ][]ifelse luck = 3[
+      set sociabilidade (sociabilidade - 1)
+    ][]ifelse luck = 4 [
+      if sociabilidade < 50[
+          set pcolor red
+          die
+        ]
+    ][]
+  ]
+  []
+end
+
+to Comer_solitario
+  if pcolor = green [
+    set pcolor black
+    set energia (energia + ener_alimento)
+  ]
+end
 
 
 
@@ -232,6 +287,25 @@ nr_social
 17
 1
 11
+
+PLOT
+654
+10
+854
+160
+Nr. Agentes
+NIL
+NIL
+0.0
+10.0
+0.0
+10.0
+true
+false
+"" ""
+PENS
+"nr_sociais" 1.0 0 -2674135 true "" "plot count sociais"
+"nr_solitarios" 1.0 0 -7500403 true "" "plot count solitarios"
 
 @#$#@#$#@
 ## WHAT IS IT?
