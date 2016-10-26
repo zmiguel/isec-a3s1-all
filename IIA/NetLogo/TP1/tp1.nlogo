@@ -1,11 +1,64 @@
+turtles-own[energia]
+breed [solitarios solitario]
+breed [sociais social]
+globals [gold]
 
 to Setup
+  set gold 0
+  clear-all
+  create-solitarios nr_solitario
+  create-sociais nr_social
+  Setup-patches
 
+ask solitarios
+ [
+ set size 1
+ set color gray
+ ]
+ask sociais
+  [
+  set size 1
+  set color red
+  ]
+ ask turtles
+ [
+   setxy random-xcor random-ycor
+   set heading random 360
+   set shape "person"
+   set energia ener_inicial
+ ]
+
+
+end
+
+to Setup-patches
+  ask patches[
+    let cel_nr random 101
+    if cel_nr < cel_alimento[ ;; criar celulas alimento
+      set pcolor green
+      ]
+
+    if 50 <= cel_nr and cel_nr < cel_bonus + 50[ ;; criar celulas bonus
+      set pcolor blue
+      ]
+    let cel_dor random 101
+
+    if cel_dor = cel_nr[ ;; criar UMA SO celula amarela (dourada celula mega especial)
+      if pcolor = black and gold = 0[
+        set pcolor yellow
+        set gold 1
+        ]
+      ]
+  ]
 end
 
 to Go
 
 end
+
+
+
+
 @#$#@#$#@
 GRAPHICS-WINDOW
 206
@@ -99,10 +152,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-10
-128
-182
-161
+11
+317
+183
+350
 ener_alimento
 ener_alimento
 1
@@ -118,8 +171,8 @@ SLIDER
 179
 183
 212
-nr_solitatio
-nr_solitatio
+nr_solitario
+nr_solitario
 1
 100
 20
@@ -145,9 +198,9 @@ HORIZONTAL
 
 SLIDER
 11
-270
+277
 183
-303
+310
 ener_inicial
 ener_inicial
 1
@@ -157,6 +210,28 @@ ener_inicial
 1
 NIL
 HORIZONTAL
+
+MONITOR
+11
+370
+94
+415
+Nr. Solitarios
+nr_solitario
+17
+1
+11
+
+MONITOR
+110
+370
+184
+415
+Nr. Sociais
+nr_social
+17
+1
+11
 
 @#$#@#$#@
 ## WHAT IS IT?
