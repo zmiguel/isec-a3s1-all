@@ -1,6 +1,7 @@
 turtles-own[energia]
 breed [solitarios solitario]
 breed [sociais social]
+breed [liders lider]
 globals [gold sociabilidade]
 
 to Setup
@@ -11,19 +12,17 @@ to Setup
   create-sociais nr_social
   Setup-patches
 
-ask solitarios
- [
- set size 1
+ask solitarios[
  set color gray
  ]
-ask sociais
-  [
-  set size 1
+ask sociais[
   set color red
   set sociabilidade 10
   ]
- ask turtles
- [
+ask liders[
+  set color yellow
+  ]
+ask turtles[
    setxy random-xcor random-ycor
    set heading random 360
    set shape "person"
@@ -76,6 +75,10 @@ to Go
     Comer_solitario
   ]
 
+  ask liders[
+    forward 1
+    ]
+
   if(count turtles = 0)[
     stop
   ]
@@ -102,7 +105,15 @@ to Comer_social
         ]
     ][]
   ]
-  []
+  []ifelse pcolor = yellow[
+    set pcolor black
+    set breed liders
+    set color yellow
+    set shape "person"
+    set size 5
+    set energia energia
+    set sociabilidade sociabilidade
+    ][]
 end
 
 to Comer_solitario
@@ -230,7 +241,7 @@ nr_solitario
 nr_solitario
 1
 100
-20
+1
 1
 1
 NIL
@@ -245,7 +256,7 @@ nr_social
 nr_social
 1
 100
-20
+100
 1
 1
 NIL
@@ -272,7 +283,7 @@ MONITOR
 94
 415
 Nr. Solitarios
-nr_solitario
+count solitarios
 17
 1
 11
@@ -283,7 +294,7 @@ MONITOR
 184
 415
 Nr. Sociais
-nr_social
+count sociais
 17
 1
 11
@@ -301,11 +312,23 @@ NIL
 0.0
 10.0
 true
-false
+true
 "" ""
 PENS
 "nr_sociais" 1.0 0 -2674135 true "" "plot count sociais"
 "nr_solitarios" 1.0 0 -7500403 true "" "plot count solitarios"
+"liders" 1.0 0 -955883 true "" "plot count liders"
+
+MONITOR
+99
+477
+156
+522
+liders
+count liders
+17
+1
+11
 
 @#$#@#$#@
 ## WHAT IS IT?
