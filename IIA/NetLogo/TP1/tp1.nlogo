@@ -57,6 +57,7 @@ end
 to Go
   ask sociais[
     forward 1
+    set heading random 360
     set energia (energia - 1)
     if energia <= 0[
       set pcolor red
@@ -67,6 +68,7 @@ to Go
 
   ask solitarios[
     forward 1
+    set heading random 360
     set energia (energia - 1)
     if energia <= 0[
       set pcolor grey
@@ -77,6 +79,7 @@ to Go
 
   ask liders[
     forward 1
+    set heading random 360
     ]
 
   if(count turtles = 0)[
@@ -110,9 +113,10 @@ to Comer_social
     set breed liders
     set color yellow
     set shape "person"
-    set size 5
+    set size 3
     set energia energia
     set sociabilidade sociabilidade
+    set heading random 360
     ][]
 end
 
@@ -241,7 +245,7 @@ nr_solitario
 nr_solitario
 1
 100
-1
+50
 1
 1
 NIL
@@ -256,7 +260,7 @@ nr_social
 nr_social
 1
 100
-100
+50
 1
 1
 NIL
@@ -317,7 +321,7 @@ true
 PENS
 "nr_sociais" 1.0 0 -2674135 true "" "plot count sociais"
 "nr_solitarios" 1.0 0 -7500403 true "" "plot count solitarios"
-"liders" 1.0 0 -955883 true "" "plot count liders"
+"liders" 1.0 0 -1184463 true "" "plot count liders"
 
 MONITOR
 99
