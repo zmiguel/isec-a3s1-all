@@ -2,7 +2,7 @@ turtles-own[energia]
 breed [solitarios solitario]
 breed [sociais social]
 breed [liders lider]
-globals [gold sociabilidade]
+globals [gold sociabilidade per_alimento per_bonus nr_patches]
 
 to Setup
   set gold 0
@@ -28,33 +28,44 @@ ask turtles[
    set shape "person"
    set energia ener_inicial
    set size 1.5
+   ifelse ver_ener[
+     set label energia
+     ][
+     set label ""]
  ]
-
 
 end
 
 to Setup-patches
+  set per_alimento cel_alimento / 100
+  set per_bonus cel_bonus / 100
+  set nr_patches count patches
+
   ask patches[
-    let cel_nr random 101
-    if cel_nr < cel_alimento[ ;; criar celulas alimento
+    let cel_nr random (nr_patches + 1)
+
+    if cel_nr < (per_alimento * nr_patches)[ ;; criar celulas alimento
       set pcolor green
       ]
 
-    if 50 <= cel_nr and cel_nr < cel_bonus + 50[ ;; criar celulas bonus
+    if (nr_patches / 2) <= cel_nr and cel_nr < ((nr_patches * per_bonus) + (nr_patches / 2))[ ;; criar celulas bonus
       set pcolor blue
       ]
-    let cel_dor random 101
 
-    if cel_dor = cel_nr[ ;; criar UMA SO celula amarela (dourada celula mega especial)
-      if pcolor = black and gold = 0[
-        set pcolor yellow
-        set gold 1
-        ]
+     if pcolor = black and gold = 0[
+      set pcolor yellow
+      set gold 1
       ]
   ]
 end
 
 to Go
+  ask turtles[
+    ifelse ver_ener[
+      set label energia
+      ][
+      set label ""]
+    ]
   ask sociais[
     forward 1
     set heading random 360
@@ -134,9 +145,9 @@ GRAPHICS-WINDOW
 206
 10
 645
-470
+444
 16
-16
+15
 13.0
 1
 10
@@ -149,8 +160,8 @@ GRAPHICS-WINDOW
 1
 -16
 16
--16
-16
+-15
+15
 0
 0
 1
@@ -324,12 +335,34 @@ PENS
 "liders" 1.0 0 -1184463 true "" "plot count liders"
 
 MONITOR
-99
-477
-156
-522
-liders
+12
+420
+69
+465
+LIDER
 count liders
+17
+1
+11
+
+SWITCH
+75
+432
+194
+465
+ver_ener
+ver_ener
+0
+1
+-1000
+
+MONITOR
+655
+167
+743
+212
+nr. patches
+count patches
 17
 1
 11
