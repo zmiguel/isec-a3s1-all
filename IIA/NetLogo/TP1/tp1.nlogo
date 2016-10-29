@@ -1,11 +1,13 @@
-turtles-own[energia sociabilidade]
+turtles-own[energia sociabilidade rodou]
 breed [solitarios solitario]
 breed [sociais social]
 breed [liders lider]
-globals [gold per_alimento per_bonus nr_patches rand1 rodar1 rodou]
+globals [gold per_alimento per_bonus nr_patches rand1 rodar1 neigh_up neigh_down neigh_left neigh_right neigh_total neigh_rand target]
 
 to Setup
+  set neigh_total 0
   set gold 0
+  set target 0
   clear-all
   RESET-TICKS
   create-solitarios nr_solitario
@@ -39,6 +41,7 @@ ask turtles[
      ]
    set shape "person"
    set energia ener_inicial
+   set rodou 0
    set size 1.5
    ifelse ver_ener[
      set label energia
@@ -75,14 +78,18 @@ to Go
   ;;movimentos
   Mover_sociais
   Mover_solitarios
+  Mover_lider
 
   ;;liders aqui
 
-  ask liders[
-    forward 1
-    set heading random 360
+  if gold = 0 [
+    ask patches [
+      if pcolor = black and gold = 0[
+      set pcolor yellow
+      set gold 1
+      ]
     ]
-
+  ]
   ;;se deixarem de haver pessoas faz stop ao programa
 
   if(count turtles = 0)[
@@ -163,47 +170,117 @@ to Mover_solitarios
       set label ""
       ]
     Comer_solitario
-    ifelse [pcolor] of patch-ahead 1 = green
-      [
-        forward 1
-        set energia (energia - 1)
-        if energia <= 0[
-          die
-        ]
+    if count turtles-on neighbors >= 2[
+      set energia ( energia * .95 )
       ]
+    if any? turtles-at 0 1 and any? turtles-at 1 0 [
+      right 180
+      forward 1
+      right 90
+      forward 1
+      set energia ( energia - 4 )
+      ]
+    if any? turtles-at 0 1 [
+      right 180
+      forward 1
+      set energia ( energia - 4 )
+      ]
+    if any? turtles-at 1 0 [
+      left 90
+      forward 1
+      set energia ( energia - 4 )
+      ]
+    if count turtles-at 0 1 = 0 and count turtles-at 1 0 = 0[
+      ifelse rodou = 1[
+        forward 1
+        set rodou 0
+        ]
       [
-        if [pcolor] of patch-at -1 0 = green[
-          left 90
-          ]
-        ifelse [pcolor] of patch-at 1 0 = green[
-          right 90
-          ]
-        [
-          ifelse rodou = 1[
+        set rodar1 random 3
+          if rodar1 = 1[
+            right 90
+            set rodou 1
+            ]
+          if rodar1 = 2[
             forward 1
             set rodou 0
             ]
-          [
-            set rodar1 random 4
-              if rodar1 = 1[
-                left 90
-                set rodou 1
-                ]
-              if rodar1 = 2[
-                right 90
-                set rodou 1
-                ]
-              if rodar1 = 3[
-                forward 1
-                set rodou 0
-                ]
-             ]
+        ]
+      set energia (energia - 1)
+      if energia <= 0[
+        die
+        ]
+    ]
+  ]
+end
+
+to Mover_lider
+  ask sociais[  ;;tenta comer primeiro, depois procura comida
+    ifelse ver_ener[
+      set label energia
+      ][
+      set label sociabilidade
+      ]
+    Comer_lider
+
+    ifelse any? sociais-on neighbors4[
+      set neigh_total 0
+      if any? sociais-at 0 1[
+        set neigh_up 1
+        set neigh_total ( neigh_total + 1 )
+        ]
+      if any? sociais-at 0 -1[
+        set neigh_down 1
+        set neigh_total ( neigh_total + 1 )
+        ]
+      if any? sociais-at 1 0[
+        set neigh_right 1
+        set neigh_total ( neigh_total + 1 )
+        ]
+      if any? sociais-at -1 0[
+        set neigh_left 1
+        set neigh_total ( neigh_total + 1 )
+        ]
+
+      while [target = 0]
+      [
+        set neigh_rand random 5
+
+        if neigh_rand = 1 and neigh_up = 1 [
+          if sociabilidade < 25 [
+            set energia ( sociais-at 0 1 [energia * 0.2] )
+            ask sociais-at 0 1 [ set energia ( energia * 0.8 )]
+            ]
           ]
+        ]
+
+      ]
+    [
+      ifelse rodou = 1[
+        forward 1
+        set rodou 0
+        ]
+      [
+        set rodar1 random 4
+          if rodar1 = 1[
+            left 90
+            set rodou 1
+            ]
+           if rodar1 = 2[
+             right 90
+            set rodou 1
+            ]
+          if rodar1 = 3[
+            forward 1
+            set rodou 0
+            ]
+         ]
         set energia (energia - 1)
         if energia <= 0[
           die
           ]
       ]
+
   ]
 end
 
@@ -223,6 +300,9 @@ to Comer_social
     ]
     if luck = 3[
       set sociabilidade (sociabilidade - 1)
+      if sociabilidade <= 0 [
+        die
+      ]
     ]
     if luck = 4 [
       if sociabilidade < 50[
@@ -238,7 +318,33 @@ to Comer_social
     set size 3
     set energia energia
     set sociabilidade sociabilidade
-    set heading random 360
+    set rodou rodou
+  ]
+end
+
+to Comer_lider
+  if pcolor = blue[
+    set pcolor black
+    let luck random 4  ;; 1: aumentar em 10% energia // 2: +1% socia // 3: -1% socia // 4: mata se for menor que 50% socia
+    if luck = 1[
+      set pcolor black
+      set breed sociais
+      set color red
+      set sociabilidade sociabilidade
+      set shape "person"
+      set energia energia
+      set size 1.5
+      set gold 0
+    ]
+    if luck = 2[
+      set sociabilidade (sociabilidade * 1.05)
+    ]
+    if luck = 3[
+      set sociabilidade (sociabilidade * 0.95)
+      if sociabilidade <= 0 [
+        die
+      ]
+    ]
   ]
 end
 
@@ -252,10 +358,10 @@ to Comer_solitario
     set breed sociais
     set color red
     set sociabilidade 10
-    set heading random 360
     set shape "person"
-    set energia ener_inicial
+    set energia energia
     set size 1.5
+    set gold 0
   ]
 end
 
@@ -282,8 +388,8 @@ GRAPHICS-WINDOW
 16
 -15
 15
-0
-0
+1
+1
 1
 ticks
 30.0
@@ -331,7 +437,7 @@ cel_bonus
 cel_bonus
 0
 15
-5
+10
 1
 1
 NIL
