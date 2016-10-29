@@ -2,11 +2,9 @@ turtles-own[energia sociabilidade rodou]
 breed [solitarios solitario]
 breed [sociais social]
 breed [liders lider]
-globals [gold per_alimento per_bonus nr_patches rand1 rodar1 neigh_up neigh_down neigh_left neigh_right neigh_total neigh_rand target]
+globals [per_alimento per_bonus nr_patches rand1 rodar1 neigh_up neigh_down neigh_left neigh_right temp neigh_rand target]
 
 to Setup
-  set neigh_total 0
-  set gold 0
   set target 0
   clear-all
   RESET-TICKS
@@ -20,9 +18,6 @@ ask solitarios[
 ask sociais[
   set color red
   set sociabilidade 10
-  ]
-ask liders[
-  set color yellow
   ]
 ask turtles[
    setxy random-xcor random-ycor
@@ -68,12 +63,6 @@ to Go
   Mover_solitarios
   Mover_lider
 
-  ;;liders aqui
-
-  if gold = 0 [
-    ask one-of patches with [pcolor = black] [set pcolor yellow]
-    set gold 1
-    ]
   ;;se deixarem de haver pessoas faz stop ao programa
 
   if(count turtles = 0)[
@@ -199,7 +188,8 @@ to Mover_solitarios
 end
 
 to Mover_lider
-  ask sociais[  ;;tenta comer primeiro, depois procura comida
+  if count liders = 1[
+  ask liders[  ;;tenta comer primeiro, depois procura comida
     ifelse ver_ener[
       set label energia
       ][
@@ -208,22 +198,17 @@ to Mover_lider
     Comer_lider
 
     ifelse any? sociais-on neighbors4[
-      set neigh_total 0
       if any? sociais-at 0 1[
         set neigh_up 1
-        set neigh_total ( neigh_total + 1 )
         ]
       if any? sociais-at 0 -1[
         set neigh_down 1
-        set neigh_total ( neigh_total + 1 )
         ]
       if any? sociais-at 1 0[
         set neigh_right 1
-        set neigh_total ( neigh_total + 1 )
         ]
       if any? sociais-at -1 0[
         set neigh_left 1
-        set neigh_total ( neigh_total + 1 )
         ]
 
       while [target = 0]
@@ -232,19 +217,78 @@ to Mover_lider
 
         if neigh_rand = 1 and neigh_up = 1 [
           if sociabilidade < 25 [
-           ;; set energia ( sociais-at 0 1 [energia * 0.2] )
+            ask sociais-at 0 1 [ set temp energia ]
+            set energia ( energia + temp * .02 )
             ask sociais-at 0 1 [ set energia ( energia * 0.8 )]
             ]
           if sociabilidade >= 25 and sociabilidade <= 50 [
-           ;; set energia ( sociais-at 0 1 [energia * 0.5] )
+            ask sociais-at 0 1 [ set temp energia ]
+            set energia ( energia + temp * .05 )
             ask sociais-at 0 1 [ set energia ( energia * 0.5 )]
             ]
           if sociabilidade > 50 [
-           ;; set energia ( sociais-at 0 1 [energia] )
+            ask sociais-at 0 1 [ set temp energia ]
+            set energia ( energia + temp )
             ask sociais-at 0 1 [die]
             ]
+          set target 1
+          ]
+        if neigh_rand = 2 and neigh_down = 1 [
+          if sociabilidade < 25 [
+            ask sociais-at 0 -1 [ set temp energia ]
+            set energia ( energia + temp * .02 )
+            ask sociais-at 0 -1 [ set energia ( energia * 0.8 )]
+            ]
+          if sociabilidade >= 25 and sociabilidade <= 50 [
+            ask sociais-at 0 -1 [ set temp energia ]
+            set energia ( energia + temp * .05 )
+            ask sociais-at 0 -1 [ set energia ( energia * 0.5 )]
+            ]
+          if sociabilidade > 50 [
+            ask sociais-at 0 -1 [ set temp energia ]
+            set energia ( energia + temp )
+            ask sociais-at 0 -1 [die]
+            ]
+          set target 1
+          ]
+        if neigh_rand = 3 and neigh_left = 1 [
+          if sociabilidade < 25 [
+            ask sociais-at -1 0 [ set temp energia ]
+            set energia ( energia + temp * .02 )
+            ask sociais-at -1 0 [ set energia ( energia * 0.8 )]
+            ]
+          if sociabilidade >= 25 and sociabilidade <= 50 [
+            ask sociais-at -1 0 [ set temp energia ]
+            set energia ( energia + temp * .05 )
+            ask sociais-at -1 0 [ set energia ( energia * 0.5 )]
+            ]
+          if sociabilidade > 50 [
+            ask sociais-at -1 0 [ set temp energia ]
+            set energia ( energia + temp )
+            ask sociais-at -1 0 [die]
+            ]
+          set target 1
+          ]
+        if neigh_rand = 4 and neigh_right = 1 [
+          if sociabilidade < 25 [
+            ask sociais-at 1 0 [ set temp energia ]
+            set energia ( energia + temp * .02 )
+            ask sociais-at 1 0 [ set energia ( energia * 0.8 )]
+            ]
+          if sociabilidade >= 25 and sociabilidade <= 50 [
+            ask sociais-at 1 0 [ set temp energia ]
+            set energia ( energia + temp * .05 )
+            ask sociais-at 1 0 [ set energia ( energia * 0.5 )]
+            ]
+          if sociabilidade > 50 [
+            ask sociais-at 1 0 [ set temp energia ]
+            set energia ( energia + temp )
+            ask sociais-at 1 0 [die]
+            ]
+          set target 1
           ]
         ]
+      set target 0
 
       ]
     [
@@ -269,10 +313,13 @@ to Mover_lider
          ]
         set energia (energia - 1)
         if energia <= 0[
+          ask one-of patches with [pcolor = black] [set pcolor yellow]
+          show "+1 amarelo porque o lider morreu de fome"
           die
           ]
       ]
 
+  ]
   ]
 end
 
@@ -317,25 +364,22 @@ end
 to Comer_lider
   if pcolor = blue[
     set pcolor black
-    let luck random 4  ;; 1: aumentar em 10% energia // 2: +1% socia // 3: -1% socia // 4: mata se for menor que 50% socia
+    let luck random 4
     if luck = 1[
-      set pcolor black
       set breed sociais
       set color red
       set sociabilidade sociabilidade
       set shape "person"
       set energia energia
       set size 1.5
-      set gold 0
+      ask one-of patches with [pcolor = black] [set pcolor yellow]
+      show "+1 amarelo porque o lider comeu azul e ficou social"
     ]
     if luck = 2[
       set sociabilidade (sociabilidade * 1.05)
     ]
     if luck = 3[
       set sociabilidade (sociabilidade * 0.95)
-      if sociabilidade <= 0 [
-        die
-      ]
     ]
   ]
 end
@@ -353,10 +397,10 @@ to Comer_solitario
     set shape "person"
     set energia energia
     set size 1.5
-    set gold 0
+    ask one-of patches with [pcolor = black] [set pcolor yellow]
+    show "+1 amarelo porque um solitario ficou social"
   ]
 end
-
 
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -444,7 +488,7 @@ cel_alimento
 cel_alimento
 5
 20
-10
+15
 1
 1
 NIL
