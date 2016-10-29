@@ -56,22 +56,10 @@ to Setup-patches
   set per_bonus cel_bonus / 100
   set nr_patches count patches
 
-  ask patches[
-    let cel_nr random (nr_patches + 1)
+  ask n-of (per_alimento * nr_patches) patches with [pcolor = black] [set pcolor green]
+  ask n-of (per_bonus * nr_patches) patches with [pcolor = black] [set pcolor blue]
+  ask one-of patches with [pcolor = black] [set pcolor yellow]
 
-    if cel_nr < (per_alimento * nr_patches)[ ;; criar celulas alimento
-      set pcolor green
-      ]
-
-    if (nr_patches / 2) <= cel_nr and cel_nr < ((nr_patches * per_bonus) + (nr_patches / 2))[ ;; criar celulas bonus
-      set pcolor blue
-      ]
-
-     if pcolor = black and gold = 0[
-      set pcolor yellow
-      set gold 1
-      ]
-  ]
 end
 
 to Go
@@ -83,13 +71,9 @@ to Go
   ;;liders aqui
 
   if gold = 0 [
-    ask patches [
-      if pcolor = black and gold = 0[
-      set pcolor yellow
-      set gold 1
-      ]
+    ask one-of patches with [pcolor = black] [set pcolor yellow]
+    set gold 1
     ]
-  ]
   ;;se deixarem de haver pessoas faz stop ao programa
 
   if(count turtles = 0)[
@@ -248,8 +232,16 @@ to Mover_lider
 
         if neigh_rand = 1 and neigh_up = 1 [
           if sociabilidade < 25 [
-            set energia ( sociais-at 0 1 [energia * 0.2] )
+           ;; set energia ( sociais-at 0 1 [energia * 0.2] )
             ask sociais-at 0 1 [ set energia ( energia * 0.8 )]
+            ]
+          if sociabilidade >= 25 and sociabilidade <= 50 [
+           ;; set energia ( sociais-at 0 1 [energia * 0.5] )
+            ask sociais-at 0 1 [ set energia ( energia * 0.5 )]
+            ]
+          if sociabilidade > 50 [
+           ;; set energia ( sociais-at 0 1 [energia] )
+            ask sociais-at 0 1 [die]
             ]
           ]
         ]
