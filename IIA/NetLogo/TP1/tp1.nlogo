@@ -2,7 +2,7 @@ turtles-own[energia]
 breed [solitarios solitario]
 breed [sociais social]
 breed [liders lider]
-globals [gold sociabilidade per_alimento per_bonus nr_patches]
+globals [gold sociabilidade per_alimento per_bonus nr_patches rand1 rodar1]
 
 to Setup
   set gold 0
@@ -24,7 +24,19 @@ ask liders[
   ]
 ask turtles[
    setxy random-xcor random-ycor
-   set heading random 360
+   set rand1 random 5
+   if rand1 = 1[
+     set heading 0
+     ]
+   if rand1 = 2[
+     set heading 90
+     ]
+   if rand1 = 3[
+     set heading 180
+     ]
+   if rand1 = 4[
+     set heading 270
+     ]
    set shape "person"
    set energia ener_inicial
    set size 1.5
@@ -66,18 +78,58 @@ to Go
       ][
       set label ""]
     ]
-  ask sociais[
+
+  ;;movimentos
+  Mover_sociais
+  Mover_solitarios
+
+  ;;liders aqui
+
+  ask liders[
     forward 1
     set heading random 360
-    set energia (energia - 1)
-    if energia <= 0[
-      set pcolor red
-      die
-      ]
-    Comer_social
-  ]
+    ]
 
-  ask solitarios[
+  ;;se deixarem de haver pessoas faz stop ao programa
+
+  if(count turtles = 0)[
+    stop
+  ]
+  tick
+end
+
+to Mover_sociais
+  ask sociais[  ;;procurar comida
+    ifelse [pcolor] of patch-ahead 1 = green
+      [
+        forward 1
+        set energia (energia - 1)
+        Comer_social
+        if energia <= 0[
+          set pcolor red
+          die
+        ]
+      ]
+      [
+        set rodar1 random 3
+        if rodar1 = 1[
+          left 90
+          ]
+        if rodar = 2[
+          right 90
+          ]
+        set energia (energia - 1)
+        Comer_social
+        if energia <= 0[
+          set pcolor red
+          die
+        ]
+      ]
+  ]
+end
+
+to Mover_solitarios
+    ask solitarios[
     forward 1
     set heading random 360
     set energia (energia - 1)
@@ -87,39 +139,33 @@ to Go
       ]
     Comer_solitario
   ]
-
-  ask liders[
-    forward 1
-    set heading random 360
-    ]
-
-  if(count turtles = 0)[
-    stop
-  ]
-  tick
 end
 
 to Comer_social
   if pcolor = green [
     set pcolor black
     set energia (energia + ener_alimento)
-  ]ifelse pcolor = blue[
+  ]
+  if pcolor = blue[
     set pcolor black
     let luck random 5  ;; 1: aumentar em 10% energia // 2: +1% socia // 3: -1% socia // 4: mata se for menor que 50% socia
     if luck = 1[
       set energia (energia * 1.1)
-    ]ifelse luck = 2[
+    ]
+    if luck = 2[
       set sociabilidade (sociabilidade + 1)
-    ][]ifelse luck = 3[
+    ]
+    if luck = 3[
       set sociabilidade (sociabilidade - 1)
-    ][]ifelse luck = 4 [
+    ]
+    if luck = 4 [
       if sociabilidade < 50[
           set pcolor red
           die
-        ]
-    ][]
+      ]
+    ]
   ]
-  []ifelse pcolor = yellow[
+  if pcolor = yellow[
     set pcolor black
     set breed liders
     set color yellow
@@ -128,7 +174,7 @@ to Comer_social
     set energia energia
     set sociabilidade sociabilidade
     set heading random 360
-    ][]
+  ]
 end
 
 to Comer_solitario
@@ -136,8 +182,17 @@ to Comer_solitario
     set pcolor black
     set energia (energia + ener_alimento)
   ]
+  if pcolor = yellow[
+    set pcolor black
+    set breed sociais
+    set color red
+    set sociabilidade 10
+    set heading random 360
+    set shape "person"
+    set energia ener_inicial
+    set size 1.5
+  ]
 end
-
 
 
 @#$#@#$#@
@@ -209,7 +264,7 @@ SLIDER
 82
 cel_bonus
 cel_bonus
-1
+0
 15
 10
 1
@@ -224,7 +279,7 @@ SLIDER
 121
 cel_alimento
 cel_alimento
-1
+5
 20
 10
 1
