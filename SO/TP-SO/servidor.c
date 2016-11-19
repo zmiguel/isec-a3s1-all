@@ -11,7 +11,20 @@
 
 #include "util.h"
 
+void display_campo(struct campo *campo1){
+    int i=0, lin, col;
+    for(lin=0;lin<21;lin++){
+        for(col=0;col<51;col++){
+            printf("%s ",campo1[i].cont);
+            i++;
+        }
+        printf("\n");
+    }
+    printf("\n");
+}
+
 int fd_servidor, fd_cliente;
+struct campo *camposervidor = campo1;
 
 int main(void){
     char movimento[20];
@@ -56,6 +69,18 @@ int main(void){
                     strcpy(msg.resposta,"AJUDA:\n\tdesligar:\tdesliga o cliente e servidor corretamente.\n\ttest:\t\ttesta o servidor.\n\thelp:\t\teste comando\n");
                     printf("[SERVIDOR] A mostrar ajuda [%s]\n", msg.endereco);
                 }
+            }
+            //-------------------COMANDO-set----------------
+            else if(strcmp(msg.op1,"set")==0){
+                int temp;
+                char ctemp;
+                ctemp = msg.op4[0];
+                temp = ((atoi(msg.op2) - 1) * 51  + atoi(msg.op3));
+                printf("[SERVIDOR] character %c adicionado a %d [%s]\n", ctemp, temp, msg.endereco); 
+                camposervidor[temp-1].cont[0] = ctemp;
+                display_campo(camposervidor);
+                strcpy(msg.resposta,"mudado\n");
+                msg.campojogo = camposervidor;
             }
             /* ABRIR "CP" DO CLIENTE (open - O_WRONLY) */
             fd_cliente = open(msg.endereco, O_WRONLY);

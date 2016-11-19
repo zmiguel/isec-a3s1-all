@@ -10,7 +10,20 @@
 
 #include "util.h"
 
+void display_campo(struct campo *campo1){
+    int i=0, lin, col;
+    for(lin=0;lin<21;lin++){
+        for(col=0;col<51;col++){
+            printf("%s ",campo1[i].cont);
+            i++;
+        }
+        printf("\n");
+    }
+    printf("\n");
+}
+
 int fd_servidor, fd_cliente;
+struct campo *campocliente = campo1;
 
 int main(void){
     char str[80], *palavra[TAM];
@@ -93,6 +106,27 @@ int main(void){
                         close(fd_cliente);
                         //FAZER RECEBIMENTO - PERGUNTAR AO ZÉ A IMPLEMENTACAO
                         printf("%s\n", msg.resposta);//ver recebimento
+                    }
+                    else if(strcmp(palavra[0],"campo")==0){
+                        display_campo(campocliente);
+                    }
+                    else if(strcmp(palavra[0],"set")==0){
+                        strcpy(msg.op1, palavra[0]);
+                        strcpy(msg.op2, palavra[1]);
+                        strcpy(msg.op3, palavra[2]);
+                        strcpy(msg.op4, palavra[3]);
+                        
+                        /* ENVIAR PEDIDO PARA "CP" DO SERVIDOR (write) */
+                        write(fd_servidor, &msg, sizeof(msg));
+                        /* ABRIR "CP" DO CLIENTE - MINHA (open - O_RDONLY) */
+                        fd_cliente = open(msg.endereco, O_RDONLY);
+                        /* RECEBER RESPOSTA NA "CP" DO CLIENTE - MINHA (read) */
+                        read(fd_cliente, &msg, sizeof(msg));//ver recebimento.
+                        /* FECHAR "CP" DO CLIENTE - MINHA (close) */
+                        close(fd_cliente);
+                        //FAZER RECEBIMENTO - PERGUNTAR AO ZÉ A IMPLEMENTACAO
+                        printf("%s\n", msg.resposta);//ver recebimento
+                        //campocliente = msg.campojogo;  EXISTE UM ERRO AQUI, HEEEELLLPPPP
                     }
                     else
                         printf("Comando invalido, tenta novamente!\n");
