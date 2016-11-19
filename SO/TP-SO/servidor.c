@@ -45,7 +45,7 @@ int main(void){
             //-------------------COMANDO-TESTE----------------
             else if(strcmp(msg.op1,"test")==0){
                 strcpy(msg.resposta,"FUNCIONA CARALHO\n");
-                printf("teste funcionou\n");
+                printf("[SERVIDOR] Teste funcionou [%s]\n", msg.endereco);
                 
             }
             //-------------------COMANDO-HELP----------------
@@ -54,18 +54,17 @@ int main(void){
                     printf("%s\n",msg.op2);
                 }else{
                     strcpy(msg.resposta,"AJUDA:\n\tdesligar:\tdesliga o cliente e servidor corretamente.\n\ttest:\t\ttesta o servidor.\n\thelp:\t\teste comando\n");
-                    printf("a mostrar ajuda\n");
+                    printf("[SERVIDOR] A mostrar ajuda [%s]\n", msg.endereco);
                 }
             }
             /* ABRIR "CP" DO CLIENTE (open - O_WRONLY) */
             fd_cliente = open(msg.endereco, O_WRONLY);
             /* ENVIAR RESPOSTA PARA A "CP" DO CLIENTE (write) */
             write(fd_cliente, &msg, sizeof(msg));
-            //write(fd_cliente, &jog1, sizeof(jog1));
             /* FECHAR "CP" DO CLIENTE (close) */
             close(fd_cliente);
         }while(msg.desliga != 1);
-    //}
+
     printf("[SERVIDOR] SERVIDOR DESLIGADO\n");
 
     /* FECHAR "CP" DO SERVIDOR - MINHA (close) */

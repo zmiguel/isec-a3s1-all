@@ -24,7 +24,7 @@ int main(void){
         exit(1);
     };
     /* CRIAR "CP" DO CLIENTE - MINHA (mkfifo) */
-    sprintf(msg.endereco, "CPcliente %d\n", getpid());
+    sprintf(msg.endereco, "CPcliente %d", getpid());
     mkfifo(msg.endereco, 0600); //0600 READ && WRITE
     /* ABRIR "CP" DO SERVIDOR (open - O_WRONLY) */
     fd_servidor = open("CPservidor", O_WRONLY);
@@ -98,7 +98,6 @@ int main(void){
                         printf("Comando invalido, tenta novamente!\n");
                 }
         }while(strcmp(str,"desistir")!=0);
-    //}while(play1.permissao != 1);
     /* FECHAR "CP" DO SERVIDOR (close) */
     close(fd_servidor);
     /* REMOVER "cp" DO CLIENTE - EU (UNLINK) */
