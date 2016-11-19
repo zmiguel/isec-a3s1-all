@@ -223,7 +223,7 @@ to Mover_lider
             ]
           if sociabilidade >= 25 and sociabilidade <= 50 [
             ask sociais-at 0 1 [ set temp energia ]
-            set energia ( energia + temp * .05 )
+            set energia ( energia + temp * 0.5 )
             ask sociais-at 0 1 [ set energia ( energia * 0.5 )]
             ]
           if sociabilidade > 50 [
@@ -241,7 +241,7 @@ to Mover_lider
             ]
           if sociabilidade >= 25 and sociabilidade <= 50 [
             ask sociais-at 0 -1 [ set temp energia ]
-            set energia ( energia + temp * .05 )
+            set energia ( energia + temp * 0.5 )
             ask sociais-at 0 -1 [ set energia ( energia * 0.5 )]
             ]
           if sociabilidade > 50 [
@@ -259,7 +259,7 @@ to Mover_lider
             ]
           if sociabilidade >= 25 and sociabilidade <= 50 [
             ask sociais-at -1 0 [ set temp energia ]
-            set energia ( energia + temp * .05 )
+            set energia ( energia + temp * 0.5 )
             ask sociais-at -1 0 [ set energia ( energia * 0.5 )]
             ]
           if sociabilidade > 50 [
@@ -277,7 +277,7 @@ to Mover_lider
             ]
           if sociabilidade >= 25 and sociabilidade <= 50 [
             ask sociais-at 1 0 [ set temp energia ]
-            set energia ( energia + temp * .05 )
+            set energia ( energia + temp * 0.5 )
             ask sociais-at 1 0 [ set energia ( energia * 0.5 )]
             ]
           if sociabilidade > 50 [
@@ -401,7 +401,6 @@ to Comer_solitario
     show "+1 amarelo porque um solitario ficou social"
   ]
 end
-
 @#$#@#$#@
 GRAPHICS-WINDOW
 206
