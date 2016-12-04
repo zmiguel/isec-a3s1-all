@@ -78,10 +78,15 @@ int main(void){
                 temp = ((atoi(msg.op2) - 1) * 51  + atoi(msg.op3));
                 printf("[SERVIDOR] character %c adicionado a %d [%s]\n", ctemp, temp, msg.endereco); 
                 camposervidor[temp-1].cont[0] = ctemp;
-                display_campo(camposervidor);
-                strcpy(msg.resposta,"mudado\n");
+                printf("added\n");
                 msg.campojogo = camposervidor;
+                printf("copied\n");
+                display_campo(msg.campojogo);
+                strcpy(msg.resposta,"mudado\n");
             }
+
+
+            
             /* ABRIR "CP" DO CLIENTE (open - O_WRONLY) */
             fd_cliente = open(msg.endereco, O_WRONLY);
             /* ENVIAR RESPOSTA PARA A "CP" DO CLIENTE (write) */

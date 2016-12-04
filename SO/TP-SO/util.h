@@ -1,18 +1,11 @@
-#define TAM 10
+#define TAM 25
 //----------RANDOM-FUNC----------------------
 int obtem_rand(int min, int max){
     int random;
     random = min + (rand() % (max - min + 1));
     return random;
 }
-//----------ESTRUTURA-MENSAGEM---------------
-typedef struct mensagem{
-	char op1[TAM], op2[TAM], op3[TAM], op4[TAM], op5[TAM];
-	char resposta[2000];
-    char endereco[20];
-    struct campo *campojogo;
-    int desliga;
-}MENSAGEM;
+
 //-----ESTRUTURA-CAMPO-&-DECLARAÇAO-CAMPO-----
 typedef struct campo{
     char cont[2];
@@ -22,6 +15,15 @@ typedef struct campo{
     int idjog;
     int team;
 }CAMPO;
+
+//----------ESTRUTURA-MENSAGEM---------------
+typedef struct mensagem{
+	char op1[TAM], op2[TAM], op3[TAM], op4[TAM], op5[TAM];
+	char resposta[2000];
+    char endereco[20];
+    struct campo *campojogo;
+    int desliga;
+}MENSAGEM;
 
 CAMPO campo1[1071] = {
     // LINHA 1

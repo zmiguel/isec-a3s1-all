@@ -6,7 +6,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#define TAM 10
+#define TAM 25
 
 #include "util.h"
 
@@ -44,6 +44,8 @@ int main(void){
 
     printf("-----BEM-VINDO-----\n");
     printf("'help' para ajuda\n\n");
+
+    msg.campojogo = campo1;
         do{
             printf("> ");
             fgets(str, 80, stdin);
@@ -126,7 +128,8 @@ int main(void){
                         close(fd_cliente);
                         //FAZER RECEBIMENTO - PERGUNTAR AO ZÉ A IMPLEMENTACAO
                         printf("%s\n", msg.resposta);//ver recebimento
-                        //campocliente = msg.campojogo;  EXISTE UM ERRO AQUI, HEEEELLLPPPP
+                        //memcpy(&campocliente, &msg.campojogo, sizeof(campocliente));
+                        campocliente = msg.campojogo; // EXISTE UM ERRO AQUI, HEEEELLLPPPP
                     }
                     else
                         printf("Comando invalido, tenta novamente!\n");
