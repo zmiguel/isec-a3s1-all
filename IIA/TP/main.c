@@ -36,7 +36,7 @@ int main(){
 
   totalSol = init_dados(nome_fich);
 
-  for(ii=0;ii<5000000;ii++){
+  for(ii=0;ii<500000;ii++){
       //abrir ficheiro aqui
 
       totalSol = init_dados(nome_fich);
