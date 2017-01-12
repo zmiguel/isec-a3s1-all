@@ -4,4 +4,5 @@
 
 int main(int argc, char *argv[]){
   printf("some random text\n", );
+  printf("more random text\n", );
 }
