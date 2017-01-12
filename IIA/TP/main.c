@@ -32,7 +32,6 @@ int main(){
   fgets(nome_fich, sizeof(nome_fich), stdin);
   nome_fich[strlen(nome_fich)-1]='\0';
 
-  
   for(ii=0;ii<50;ii++){
       //abrir ficheiro aqui
 
