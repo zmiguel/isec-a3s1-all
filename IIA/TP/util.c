@@ -19,52 +19,47 @@ int* init_dados(char *nome){
 
 	FILE *f;
 	int i=0;
-    float dist;
-    int conta=0;
-    int total = 0;
-    int cool, pool;
+  float dist;
+  int conta=0;
+  int total = 0;
+  int cool, pool;
 
 	f=fopen(nome, "r");
-	if(!f)
-	{
+	if(!f){
 		printf("Erro no acesso ao ficheiro dos dados\n");
 		exit(1);
 	}
 
-    do{
-    fscanf(f," %d", &cool);
-    fscanf(f," %d", &pool);
-    fscanf(f," %f", &dist);
-    conta++;
+  do{
+  fscanf(f," %d", &cool);
+  fscanf(f," %d", &pool);
+  fscanf(f," %f", &dist);
+  conta++;
 
-    }while(cool == 1);
-		printf("conta %d\n", conta);
-		max = conta;
-		printf("max %d\n", max);
-		conta--;
+  }while(cool == 1);
+	//printf("conta %d\n", conta);
+	max = conta;
+	printf("nr pontos: %d\n", max);
+	conta--;
 
-        //MAXIMO DE SOLU��ES
-        do{
-
-            total += conta;
-            conta--;
-        }while(conta != 0);
-    printf("total: %d\n", total);
-close(f);
-
-return total;
+  //MAXIMO DE SOLU��ES
+  do{
+    total += conta;
+    conta--;
+  }while(conta != 0);
+  //printf("total: %d\n", total);
+	fclose(f);
+	return total;
 }
 
 void guardaEstrutura(char *nome,int totalSol){
-
-
-    FILE *f;
+  FILE *f;
 	int i=0;
-    float dist;
+  float dist;
 
-    struct item mySol[MAX_ITEMS];
+  struct item mySol[MAX_ITEMS];
 
-    printf("TOTAL: %d\n", totalSol);
+  //printf("TOTAL: %d\n", totalSol);
 	f=fopen(nome, "r");
 	if(!f)
 	{
@@ -72,13 +67,10 @@ void guardaEstrutura(char *nome,int totalSol){
 		exit(1);
 	}
 
-    while(i != totalSol){
-			fscanf(f,"%d %d %f", &myItems[i].ponto1,&myItems[i].ponto2,&myItems[i].distanc);
-			printf("%d:\t %d %d %f\n", i, myItems[i].ponto1,myItems[i].ponto2,myItems[i].distanc);
-			i++;
+  while(i != totalSol){
+		fscanf(f,"%d %d %f", &myItems[i].ponto1,&myItems[i].ponto2,&myItems[i].distanc);
+		//printf("%d:\t %d %d %f\n", i, myItems[i].ponto1,myItems[i].ponto2,myItems[i].distanc);
+		i++;
 	}
-
-
-close(f);
-
+	fclose(f);
 }
