@@ -1,0 +1,21 @@
+# depslib dependency file v1.0
+1385316878 source:c:\users\util\desktop\isec\nova pasta\ads\main.c
+	<stdio.h>
+	<stdlib.h>
+
+1484233219 source:c:\users\util\desktop\isec\nova pasta\ads\untitled4.c
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+	"util.h"
+
+1484233261 c:\users\util\desktop\isec\nova pasta\ads\util.h
+	<stdio.h>
+	<stdlib.h>
+
+1484234001 source:c:\users\util\desktop\isec\nova pasta\ads\util.c
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+	"util.h"
+
