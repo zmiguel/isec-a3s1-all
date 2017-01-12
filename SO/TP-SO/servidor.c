@@ -30,6 +30,7 @@ int main(void){
     char movimento[20];
     int m, n, permissao = 0, x, y;
     int i, j, k;
+    FILE *logins;
 
     MENSAGEM msg;
 
@@ -46,6 +47,14 @@ int main(void){
     fd_servidor = open("CPservidor", O_RDWR);
 
     printf("[SERVIDOR] Servidor Iniciado!\n");
+    printf("[SERVIDOR / INFO] A abrir ficheiro de logins\n");
+    
+    logins = fopen("users.txt", "r");
+    if(logins == NULL){
+	    printf("ERRO a abrir logins.txt\n");
+	    exit(1);
+	}
+    fclose(logins);
         do{
             /* RECEBER PEDIDO NA "CP" DO SERVIDOR - MINHA (n = read();) */
             n = read(fd_servidor, &msg, sizeof(msg));
@@ -57,7 +66,7 @@ int main(void){
             }
             //-------------------COMANDO-TESTE----------------
             else if(strcmp(msg.op1,"test")==0){
-                strcpy(msg.resposta,"FUNCIONA CARALHO\n");
+                strcpy(msg.resposta,"FUNCIONA\n");
                 printf("[SERVIDOR] Teste funcionou [%s]\n", msg.endereco);
                 
             }
@@ -84,7 +93,35 @@ int main(void){
                 display_campo(msg.campojogo);
                 strcpy(msg.resposta,"mudado\n");
             }
+            //-------------------USER-LOGIN----------------
+            else if(strcmp(msg.op1,"login")==0){
+                char usr[50], pass[50];
+                int temp1;
+                logins = fopen("users.txt", "r");
+                    if(logins == NULL){
+                        printf("[SERVIDOR / INFO] ERRO a abrir logins.txt\n");
+                        exit(1);
+	                }
+                
+                fscanf(logins,"%s\t%s", usr, pass);
+                printf("usr: %s\npass: %s\n", usr, pass);
+                for(temp1=0;usr!='\0';temp1++){
+                    if(strcmp(msg.op2, usr) == 0){
+                        if(strcmp(msg.op3, pass) == 0){
+                            printf("user/pass match!!\n");
+                            strcpy(msg.resposta,"valido");
+                        }
+                        printf("password errada para o user %s\n", msg.op2);
+                    }
+                    printf("user %s nao registado\n", msg.op2);
+                    fscanf(logins,"%s\t%s", usr, pass);
+                }
+                
+                //fscanf("logins","%s\t%s", usr, pass);
 
+                printf("%s\t\t%s\n", msg.op2, msg.op3);
+                printf("recebi login e abri ficheiro\n");
+            }
 
             
             /* ABRIR "CP" DO CLIENTE (open - O_WRONLY) */

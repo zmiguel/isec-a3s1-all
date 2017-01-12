@@ -25,6 +25,37 @@ void display_campo(struct campo *campo1){
 int fd_servidor, fd_cliente;
 struct campo *campocliente = campo1;
 
+void login(){
+    char str[80], *palavra[TAM], user[50], pass[50];
+    int i;
+
+    MENSAGEM msg;
+
+    printf("Ligado ao servidor!\nUser: ");
+    fgets(user, 50, stdin);
+    user[strlen(user)-1]='\0';
+
+    printf("Password: ");
+    fgets(pass, 50, stdin);
+    pass[strlen(pass)-1]='\0';
+
+    strcpy(msg.op1, "login");
+    strcpy(msg.op2, user);
+    strcpy(msg.op3, pass);
+    
+    /* ENVIAR PEDIDO PARA "CP" DO SERVIDOR (write) */
+    write(fd_servidor, &msg, sizeof(msg));
+    /* ABRIR "CP" DO CLIENTE - MINHA (open - O_RDONLY) */
+    fd_cliente = open(msg.endereco, O_RDONLY);
+    /* RECEBER RESPOSTA NA "CP" DO CLIENTE - MINHA (read) */
+    read(fd_cliente, &msg, sizeof(msg));//ver recebimento.
+    /* FECHAR "CP" DO CLIENTE - MINHA (close) */
+    close(fd_cliente);
+    //FAZER RECEBIMENTO - PERGUNTAR AO ZÉ A IMPLEMENTACAO
+    printf("%s\n", msg.resposta);//ver recebimento
+
+}
+
 int main(void){
     char str[80], *palavra[TAM];
     int i;
@@ -46,6 +77,9 @@ int main(void){
     printf("'help' para ajuda\n\n");
 
     msg.campojogo = campo1;
+
+    login();
+
         do{
             printf("> ");
             fgets(str, 80, stdin);
