@@ -3,7 +3,7 @@
 #include <time.h>
 #include "util.h"
 
-#define MAX_ITEMS 1000
+#define MAX_ITEMS 10000
 
 struct item {
     int ponto1;
@@ -14,6 +14,7 @@ struct item {
 int max = 0;
 
 struct item myItems[MAX_ITEMS];
+struct item mySol[MAX_ITEMS];
 
 int* init_dados(char *nome){
 
@@ -57,8 +58,6 @@ void guardaEstrutura(char *nome,int totalSol){
 	int i=0;
   float dist;
 
-  struct item mySol[MAX_ITEMS];
-
   //printf("TOTAL: %d\n", totalSol);
 	f=fopen(nome, "r");
 	if(!f)
@@ -73,4 +72,16 @@ void guardaEstrutura(char *nome,int totalSol){
 		i++;
 	}
 	fclose(f);
+}
+
+float dist_med(int nr_pontos, int sum, struct item *sol){
+	float res=0, c1=0, med=0;
+	int i;
+	printf("%d - %d \n", nr_pontos, sum);
+
+	for(i=0;i<sum;i++){
+		med += sol[i].distanc;
+	}
+	res = med / nr_pontos;
+	return res;
 }
