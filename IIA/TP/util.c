@@ -50,6 +50,7 @@ int* init_dados(char *nome){
   }while(conta != 0);
   //printf("total: %d\n", total);
 	fclose(f);
+	conta=0;
 	return total;
 }
 
@@ -83,5 +84,13 @@ float dist_med(int nr_pontos, int sum, struct item *sol){
 		med += sol[i].distanc;
 	}
 	res = med / nr_pontos;
+	med=0;
+	nr_pontos=0;
 	return res;
+}
+
+int give_rand(int n1, int n2){
+	int random;
+	random = n1 + (rand() % (n2 - n1 + 1));
+	return random;
 }

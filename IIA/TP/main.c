@@ -15,8 +15,7 @@ int main(){
   int pontos;
   int nova;
   int auxi[20000];
-  time_t t;
-  int novoArr[20000];
+  int novoArr[2000];
   int soma =0;
   int somar=0;
   char nome_fich[100];
@@ -24,15 +23,20 @@ int main(){
   int temp1=0, temp2=0, temp3=0;
   struct item item[MAX_ITEMS];
 
-  float melhor;
-  int ii;
+  float melhor, temp4;
+  int ii, melhor_nr=0;
+
+  time_t t;
+  srand((unsigned)time(&t));
 
   //perguntar ao utilizador o nome do ficheiro a usar
   printf("Introduza o nome do ficheiro: ");
   fgets(nome_fich, sizeof(nome_fich), stdin);
   nome_fich[strlen(nome_fich)-1]='\0';
 
-  for(ii=0;ii<50;ii++){
+  totalSol = init_dados(nome_fich);
+
+  for(ii=0;ii<5000000;ii++){
       //abrir ficheiro aqui
 
       totalSol = init_dados(nome_fich);
@@ -42,8 +46,7 @@ int main(){
         str[j] = j+1;
       }
       //escolher aleatoriamente quantos sao os numeros aleatorios
-      srand((unsigned)time(&t));
-      pontos = 2+rand()%max;
+      pontos = give_rand(2,max);
 
       //descobrir o nr de somas entre os pontos escolhidos
       somar = pontos-1;
@@ -114,12 +117,27 @@ int main(){
           }
         }
       }
-      if(dist_med(pontos, soma, mySol) > melhor){
-        melhor = dist_med(pontos, soma, mySol);
+      temp4 = dist_med(pontos, soma, mySol);
+      if(temp4 > melhor){
+        melhor = temp4;
+        melhor_nr = pontos;
       }
-      printf("Distancia media para %d pontos, iteracao %d: %f\n", pontos, ii, dist_med(pontos, soma, mySol));
+      printf("Distancia media para %d pontos, iteracao %d: %f\n", pontos, ii, temp4);
+      for(i=0;i<2000;i++){//reset tudo a zero
+        novoArr[i]=0;
+        str[i]=0;
+        auxi[i]=0;
+        soma=0;
+        somar=0;
+        contador=0;
+        temp1=0;
+        temp2=0;
+        temp3=0;
+        temp4=0;
+        totalSol=0;
+      }
   }
 
-  printf("Melhor for %f\n", melhor);
+  printf("Melhor com %d numeros: %f pontos\n", melhor_nr, melhor);
 
 }
