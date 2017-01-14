@@ -16,7 +16,7 @@ int max = 0;
 struct item myItems[MAX_ITEMS];
 struct item mySol[MAX_ITEMS];
 
-int* init_dados(char *nome){
+int init_dados(char *nome){
 
 	FILE *f;
 	int i=0;

@@ -15,7 +15,7 @@ struct info init_data(char *s, int mat[][2]);
 
 //void write_best(chrom x, struct info d);
 
-int* init_dados(char *nome);
+int init_dados(char *nome);
 
 void guardaEstrutura(char *nome,int totalSol);
 

@@ -36,7 +36,7 @@ int main(){
 
   totalSol = init_dados(nome_fich);
 
-  for(ii=0;ii<500000;ii++){
+  for(ii=0;ii<500;ii++){
       //abrir ficheiro aqui
 
       totalSol = init_dados(nome_fich);
@@ -58,7 +58,7 @@ int main(){
       printf("\n"); // cenas
       //cria array sem numeros aleatorios repetidos
       for(k=0;0==0;k++){
-        p = 1+rand()%(max+1);//meter max aqui
+        p =  give_rand(1,max);//1+rand()%(max+1);//meter max aqui
         novoArr[k] = p;
 
         for(a = 0; a<max; a++){
