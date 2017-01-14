@@ -3,7 +3,7 @@
 #include <time.h>
 #include "util.h"
 
-#define MAX_ITEMS 10000
+#define MAX_ITEMS 125000
 
 struct item {
     int ponto1;

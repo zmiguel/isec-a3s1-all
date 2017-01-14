@@ -6,15 +6,20 @@
 #include "util.h"
 #include "util.c"
 
-#define MAX_ITEMS 10000
+#define MAX_ITEMS 125000
+
+//struct item item[MAX_ITEMS];
 
 int main(int argc, char *argv[]){
     //variaveis
-  int itera=0, k=0, i=0, j=0, a=0, p=0, w=0, str[MAX_ITEMS], conta=0, contador=0, pontos=0, nova=0, auxi[MAX_ITEMS], novoArr[MAX_ITEMS], soma=0, somar=0, totalSol=0, temp1=0, temp2=0, temp3=0, ii=0, melhor_nr=0;
+  int itera=0, k=0, i=0, j=0, a=0, p=0, w=0, conta=0, contador=0, pontos=0, nova=0, soma=0, somar=0, totalSol=0, temp1=0, temp2=0, temp3=0, ii=0, melhor_nr=0;
   char nome_fich[100];
-  struct item item[MAX_ITEMS];
   float melhor=0, temp4=0;
   bool runs = false, fiile = false;
+  unsigned long long *str = malloc(MAX_ITEMS * sizeof(long long));
+  unsigned long long *auxi = malloc(MAX_ITEMS * sizeof(long long));
+  unsigned long long *novoArr = malloc(MAX_ITEMS * sizeof(long long));
+  struct item *item = malloc(MAX_ITEMS * sizeof(item));
     //setup random
   time_t t;
   srand((unsigned)time(&t));
@@ -104,7 +109,7 @@ int main(int argc, char *argv[]){
       printf("Pontos escolhidos aleatoriamente:\n");
       //mostra o novo array nao organizado
       for(i=0; i<pontos; i++){
-        printf("%d ", auxi[i]);
+        printf("%I64d ", auxi[i]);
       }
 
       printf("\n");
@@ -121,7 +126,7 @@ int main(int argc, char *argv[]){
       }
       //mostrar novo array auxi
       for(i=0; i<pontos; i++){
-        printf("%d ", auxi[i]);
+        printf("%I64d ", auxi[i]);
       }
       printf("\n");
 
@@ -152,10 +157,7 @@ int main(int argc, char *argv[]){
         melhor_nr = pontos;
       }
       printf("Distancia media para %d pontos, iteracao %d: %f\n", pontos, ii+1, temp4);
-      for(i=0;i<MAX_ITEMS;i++){//reset tudo a zero
-        novoArr[i]=0;
-        str[i]=0;
-        auxi[i]=0;
+      //reset tudo a zero
         soma=0;
         somar=0;
         contador=0;
@@ -164,7 +166,6 @@ int main(int argc, char *argv[]){
         temp3=0;
         temp4=0;
         totalSol=0;
-      }
   }
 
   printf("Melhor com %d numeros: %f pontos\n", melhor_nr, melhor);
