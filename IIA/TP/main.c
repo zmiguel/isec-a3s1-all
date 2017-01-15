@@ -62,12 +62,9 @@ int main(int argc, char *argv[]){
 
   //ler nr linhas ficheiro
   nr_linhas = init_dados(nome_fich);
-  //alocamento dinamico de arrays
-  unsigned long long *str = malloc(nr_linhas * sizeof(long long));
-  unsigned long long *auxi = malloc(nr_linhas * sizeof(long long));
-  unsigned long long *novoArr = malloc(nr_linhas * sizeof(long long));
-  unsigned long long *melhorArr = malloc(nr_linhas * sizeof(long long));
+
   struct item *item = malloc(nr_linhas * sizeof(item));
+  unsigned long long *melhorArr = malloc(nr_linhas * sizeof(long long));
 
   strcat(save_file, "LOGFILE_");
   strcat(save_file, file_temp);
@@ -78,8 +75,14 @@ int main(int argc, char *argv[]){
   strcat(save_file, iterachar);
   strcat(save_file, ".txt");
 
+  guardaEstrutura(nome_fich, nr_linhas);
+
   //ciclo para analisar dados
   for(ii=0;ii<itera;ii++){
+    //alocamento dinamico de arrays
+    unsigned long long *str = malloc((nr_linhas * 2 ) * sizeof(long long));
+    unsigned long long *auxi = malloc((nr_linhas * 2 ) * sizeof(long long));
+    unsigned long long *novoArr = malloc((nr_linhas * 2 ) * sizeof(long long));
 
       //array inicial
       for(j=0;j<nr_pontos;j++){
@@ -122,9 +125,9 @@ int main(int argc, char *argv[]){
           }
         }
       }
-      struct item *mySol = malloc((nr_comb * nr_pontos) * sizeof(item));
+      struct item *mySol = malloc((nr_comb * nr_pontos * 2) * sizeof(item));
 
-      guardaEstrutura(nome_fich, nr_linhas);
+      //guardaEstrutura(nome_fich, nr_linhas);
 
       for(i=0;i<pontos;i++){
         for(j=0;j<pontos;j++){
@@ -181,6 +184,8 @@ int main(int argc, char *argv[]){
       log(save_file, ii, pontos, nr_pontos, auxi, temp4);
       //reset tudo a zero
       free(mySol);
+      free(auxi);
+      free(str);
       pontos=0;
       contador=0;
       temp1=0;
@@ -197,6 +202,5 @@ int main(int argc, char *argv[]){
   for(i=0; i<melhor_nr; i++){
     printf("%I64d ", melhorArr[i]);
   }
-
-
+  free(melhorArr);
 }

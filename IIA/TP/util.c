@@ -9,7 +9,7 @@ struct item {
    float distanc;
 };
 
-struct item myItems[250000]; //tentei criar este array com alocação de memoria dinamica como os outros mas nao consegui :(
+struct item myItems[2500000]; //tentei criar este array com alocação de memoria dinamica como os outros mas nao consegui :(
 
 int init_dados(char *nome){
 
@@ -115,6 +115,7 @@ void log(char *filename, int id_itera, int id_pontos, int total_pontos, long lon
       fprintf(f, "%I64d,", p_list[j]);
     }
   }
+  fclose(f);
 }
 
 float neighbour(int num_pontos, float temp, struct item *myItems){
@@ -166,7 +167,7 @@ float neighbour(int num_pontos, float temp, struct item *myItems){
     }
   }
 
-  struct item *vizinho = malloc((addict * num_pontos) * sizeof(item));
+  struct item *vizinho = malloc((addict * num_pontos * 2) * sizeof(item));
 
   for(i=0;i<pontos2;i++){
     for(j=0;j<pontos2;j++){
@@ -190,5 +191,8 @@ float neighbour(int num_pontos, float temp, struct item *myItems){
   addict=0;
   adds=0;
   free(vizinho);
+  free(viz);
+  free(vizFinal);
+  free(novoViz);
   return tempo5;
 }
