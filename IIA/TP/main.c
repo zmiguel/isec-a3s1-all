@@ -175,6 +175,7 @@ int main(int argc, char *argv[]){
   printf("RELATORIO DA EXPERIENCIA:\n\n");
   printf("MELHOR RESULTADO TEM %d NUMEROS \nVALOR DE DISTANCIA MEDIA %f \nOCORREU NA ITERACAO NUMERO: %d", melhor_nr, melhor, melhor_itera);
   printf("\nPONTOS DA MELHOR SOLUCAO: ");
+  log("LOGFILE.txt", -1, melhor_nr, nr_pontos, melhorArr, melhor);
   for(i=0; i<melhor_nr; i++){
     printf("%I64d ", melhorArr[i]);
   }

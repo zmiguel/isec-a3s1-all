@@ -82,10 +82,9 @@ int give_rand(int n1, int n2){
 	return random;
 }
 
-void log(char *filename, int id_itera, int id_pontos, int total_pontos, int p_list[], float dist_res){
+void log(char *filename, int id_itera, int id_pontos, int total_pontos, long long p_list[], float dist_res){
   FILE *f;
   int i=0, j=0;
-  char *list = "", c;
 
   f=fopen(filename, "a+");
   if(!f){
@@ -94,20 +93,26 @@ void log(char *filename, int id_itera, int id_pontos, int total_pontos, int p_li
 	}
 
   //criar sctring com lista de pontos
-  for(i=0;i<id_pontos;i++){
-    c = p_list[i] + '0';
-    str_append(list,c);
-    str_append(list,' ');
-  }
 
   if(id_itera == 0){
     fprintf(f, "ITERAÇÃO,NR PONTOS SELECIONADOS,TOTAL PONTOS,LISTA DE PONTOS,RESULTADO\n");
-    fprintf(f, "%d,%d,%d,%s,%f\n",id_itera+1, id_pontos, total_pontos, list, dist_res);
+    fprintf(f, "%d,%d,%d",id_itera+1, id_pontos, total_pontos);
+    for(j=0;j<id_pontos;j++){
+      fprintf(f, "%I64d ", p_list[j]);
+    }
+    fprintf(f, ",%f\n", dist_res);
   }else if(id_itera > 0){
-    fprintf(f, "%d,%d,%d,%s,%f\n",id_itera+1, id_pontos, total_pontos, list, dist_res);
+    fprintf(f, "%d,%d,%d,",id_itera+1, id_pontos, total_pontos);
+    for(j=0;j<id_pontos;j++){
+      fprintf(f, "%I64d ", p_list[j]);
+    }
+    fprintf(f, ",%f\n", dist_res);
   }else if(id_itera == -1){
     fprintf(f, "RELATORIO DA EXPERIENCIA:\n");
     fprintf(f, "MELHOR RESULTADO: %f, COM %d NUMEROS\n", dist_res, id_pontos);
-    fprintf(f, "POSTOS DA MELHOR SOLUÇÃO: %s\n", list);
+    fprintf(f, "POSTOS DA MELHOR SOLUÇÃO: ");
+    for(j=0;j<id_pontos;j++){
+      fprintf(f, "%I64d,", p_list[j]);
+    }
   }
 }
