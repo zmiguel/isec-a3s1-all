@@ -64,7 +64,7 @@ int main(int argc, char *argv[]){
   nr_linhas = init_dados(nome_fich);
 
   struct item *item = malloc((nr_pontos * nr_linhas) * sizeof(long long));
-  unsigned long long *melhorArr = malloc((nr_pontos * nr_linhas) * sizeof(long long));
+  unsigned long long *melhorArr = malloc(2 * nr_linhas * sizeof(long long));
 
   strcat(save_file, "LOGFILE_");
   strcat(save_file, file_temp);
@@ -159,9 +159,6 @@ int main(int argc, char *argv[]){
 
       printf("RESULTADO: %f\n", melhor);
 
-      free(melhorArr);
-      unsigned long long *melhorArr = malloc((nr_pontos * nr_linhas) * sizeof(long long));
-
       for(i=0; i<pontos; i++){
           melhorArr[i] = auxi[i];
       }
@@ -170,10 +167,10 @@ int main(int argc, char *argv[]){
       printf("Resultado %f Dispensavel.\nA realizar nova experiencia...\n", temp4);
       do{
         temp5 = neighbour(nr_pontos, temp4, myItems);
-      }while(temp4 >= temp5);
-        if(melhor >= temp5){
+      }while(temp4 > temp5);
+        if(melhor > temp5){
           printf("EXPERIENCIA MELHORADA MAS ABAIXO DO MELHOR\n");
-          temp4 = temp5;
+          melhor = temp5;
         }else{
           if(temp5 > melhor);
             printf("EXPERIENCIA MELHORADA E ACIMA DO MELHOR\n");
@@ -183,9 +180,9 @@ int main(int argc, char *argv[]){
           }
     }
 
-    printf("Distancia media para %d pontos, iteracao %d: %f\n", pontos, ii+1, temp4);
-    printf("%s\n", save_file);
-    log(save_file, ii, pontos, nr_pontos, auxi, temp4);
+    printf("Distancia media para %d pontos, iteracao %d: %f/%f\n", pontos, ii+1, temp4, temp5);
+    printf("BEST: %f\n", finalMelhor);
+    log(save_file, ii, pontos, nr_pontos, auxi, melhor);
     //reset tudo a zero
     free(mySol);
     free(auxi);
@@ -195,14 +192,13 @@ int main(int argc, char *argv[]){
     temp1=0;
     temp2=0;
     temp3=0;
-    temp4=0;
   }
 
   printf("\n\n");
   printf("RELATORIO DA EXPERIENCIA:\n\n");
-  printf("MELHOR RESULTADO TEM %d NUMEROS \nVALOR DE DISTANCIA MEDIA %f \nOCORREU NA ITERACAO NUMERO: %d", melhor_nr, melhor, melhor_itera);
+  printf("MELHOR RESULTADO TEM %d NUMEROS \nVALOR DE DISTANCIA MEDIA %f \nOCORREU NA ITERACAO NUMERO: %d", melhor_nr, finalMelhor, melhor_itera);
   printf("\nPONTOS DA MELHOR SOLUCAO: ");
-  log(save_file, -1, melhor_nr, nr_pontos, melhorArr, melhor);
+  log(save_file, -1, melhor_nr, nr_pontos, melhorArr, finalMelhor);
   for(i=0; i<melhor_nr; i++){
     printf("%I64d ", melhorArr[i]);
   }

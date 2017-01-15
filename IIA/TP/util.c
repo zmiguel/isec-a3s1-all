@@ -191,7 +191,6 @@ float neighbour(int num_pontos, float temp, struct item *myItems){
   tempo1=0;
   tempo2=0;
   tempo3=0;
-  tempo5=0;
   free(vizinho);
   free(viz);
   free(vizFinal);

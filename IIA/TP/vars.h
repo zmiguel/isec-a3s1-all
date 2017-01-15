@@ -31,10 +31,10 @@ char nome_fich[100], // nome do ficheiro a abrir
      save_file[250];
 
 
-float melhor=0, //melhor valor encontrado
-      temp4=0, //temp para guardar o melhor valor encontrado
-      temp5=0, // mais uma variave para guardar o melhor resultado
-      finalMelhor=0; //guarda o melhor valor no final de cada iteraçao
+float melhor=-500, //melhor valor encontrado
+      temp4=-500, //temp para guardar o melhor valor encontrado
+      temp5=-500, // mais uma variave para guardar o melhor resultado
+      finalMelhor=-500; //guarda o melhor valor no final de cada iteraçao
 
 
 bool runs = false, //check se foi dado nr de vezes a corrrer na linha de comandos
