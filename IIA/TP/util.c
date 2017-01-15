@@ -96,7 +96,7 @@ void log(char *filename, int id_itera, int id_pontos, int total_pontos, long lon
 
   if(id_itera == 0){
     fprintf(f, "ITERAÇÃO,NR PONTOS SELECIONADOS,TOTAL PONTOS,LISTA DE PONTOS,RESULTADO\n");
-    fprintf(f, "%d,%d,%d",id_itera+1, id_pontos, total_pontos);
+    fprintf(f, "%d,%d,%d,",id_itera+1, id_pontos, total_pontos);
     for(j=0;j<id_pontos;j++){
       fprintf(f, "%I64d ", p_list[j]);
     }
