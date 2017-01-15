@@ -182,7 +182,7 @@ int main(int argc, char *argv[]){
 
     printf("Distancia media para %d pontos, iteracao %d: %f/%f\n", pontos, ii+1, temp4, temp5);
     printf("BEST: %f\n", finalMelhor);
-    log(save_file, ii, pontos, nr_pontos, auxi, melhor);
+    log(save_file, ii, pontos, nr_pontos, auxi, temp4);
     //reset tudo a zero
     free(mySol);
     free(auxi);
