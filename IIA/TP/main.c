@@ -75,12 +75,16 @@ int main(int argc, char *argv[]){
   strcat(save_file, iterachar);
   strcat(save_file, ".txt");
 
-  //guardaEstrutura(myItems, nome_fich, nr_linhas);
+  struct_size = (nr_pontos * nr_linhas + 1) * sizeof(item); //2147183647; //715725800; //nr_comb * sizeof(item);
+
+  printf("struct_size = %lld\n", struct_size);
+  struct item *myItems = malloc(struct_size);
+  guardaEstrutura(myItems, nome_fich, nr_linhas);
 
   //ciclo para analisar dados
   for(ii=0;ii<itera;ii++){
     //alocamento dinamico de arrays
-    unsigned long long *str = malloc((nr_linhas * 2 ) * sizeof(long long));
+    unsigned long long *str = malloc(nr_linhas * sizeof(long long));
 
     //array inicial
     for(j=0;j<nr_pontos;j++){
@@ -95,8 +99,8 @@ int main(int argc, char *argv[]){
       nr_comb += temp1;
     }
 
-    unsigned long long *auxi = malloc((nr_pontos * nr_linhas) * sizeof(long long));
-    unsigned long long *novoArr = malloc((nr_pontos * nr_linhas) * sizeof(long long));
+    unsigned long long *auxi = malloc(nr_linhas * sizeof(long long));
+    unsigned long long *novoArr = malloc(nr_linhas * sizeof(long long));
 
     printf("\n"); // cenas
     //cria array sem numeros aleatorios repetidos
@@ -127,12 +131,7 @@ int main(int argc, char *argv[]){
       }
     }
 
-    struct_size = nr_linhas * nr_pontos * sizeof(item); //2147183647; //715725800; //nr_comb * sizeof(item);
-
-    printf("struct_size = %lld\n", struct_size);
-    struct item *myItems = malloc(struct_size);
     struct item *mySol = malloc(struct_size);
-    guardaEstrutura(myItems, nome_fich, nr_linhas);
 
     for(i=0;i<pontos;i++){
       for(j=0;j<pontos;j++){
@@ -171,8 +170,8 @@ int main(int argc, char *argv[]){
       printf("Resultado %f Dispensavel.\nA realizar nova experiencia...\n", temp4);
       do{
         temp5 = neighbour(nr_pontos, temp4, myItems);
-      }while(temp4 > temp5);
-        if(melhor > temp5){
+      }while(temp4 >= temp5);
+        if(melhor >= temp5){
           printf("EXPERIENCIA MELHORADA MAS ABAIXO DO MELHOR\n");
           temp4 = temp5;
         }else{
@@ -189,13 +188,8 @@ int main(int argc, char *argv[]){
     log(save_file, ii, pontos, nr_pontos, auxi, temp4);
     //reset tudo a zero
     free(mySol);
-    free(myItems);
     free(auxi);
     free(novoArr);
-    mySol = NULL;
-    myItems = NULL;
-    auxi = NULL;
-    novoArr = NULL;
     pontos=0;
     contador=0;
     temp1=0;

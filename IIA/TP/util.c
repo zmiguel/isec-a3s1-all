@@ -119,11 +119,11 @@ void log(char *filename, int id_itera, int id_pontos, int total_pontos, long lon
 }
 
 float neighbour(int num_pontos, float temp, struct item *myItems){
-  struct item *item = malloc((nr_pontos * nr_linhas) * sizeof(long long));
+  struct item *item = malloc(nr_linhas * sizeof(long long));
 
-  unsigned long long *viz = malloc((nr_pontos * nr_linhas) * sizeof(long long));
-  unsigned long long *novoViz = malloc((nr_pontos * nr_linhas) * sizeof(long long));
-  unsigned long long *vizFinal = malloc((nr_pontos * nr_linhas) * sizeof(long long));
+  unsigned long long *viz = malloc(2 * nr_linhas * sizeof(long long));
+  unsigned long long *novoViz = malloc(2 * nr_linhas * sizeof(long long));
+  unsigned long long *vizFinal = malloc(2 * nr_linhas * sizeof(long long));
   int e,i,w,k,j;
   int contador2=0, addict=0, adds=0;
   int tempo1=0, tempo2=0, tempo3=0;
@@ -165,7 +165,7 @@ float neighbour(int num_pontos, float temp, struct item *myItems){
     }
   }
 
-  struct item *vizinho = malloc(nr_linhas * nr_pontos * sizeof(item));
+  struct item *vizinho = malloc(struct_size);//
 
   for(i=0;i<pontos2;i++){
     for(j=0;j<pontos2;j++){
@@ -196,9 +196,5 @@ float neighbour(int num_pontos, float temp, struct item *myItems){
   free(viz);
   free(vizFinal);
   free(novoViz);
-  vizinho = NULL;
-  viz = NULL;
-  vizFinal = NULL;
-  novoViz = NULL;
   return tempo5;
 }
