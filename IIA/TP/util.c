@@ -116,3 +116,79 @@ void log(char *filename, int id_itera, int id_pontos, int total_pontos, long lon
     }
   }
 }
+
+float neighbour(int num_pontos, float temp, struct item *myItems){
+  struct item *item = malloc(nr_linhas * sizeof(item));
+
+  unsigned long long *viz = malloc(nr_linhas * sizeof(long long));
+  unsigned long long *novoViz = malloc(nr_linhas * sizeof(long long));
+  unsigned long long *vizFinal = malloc(nr_linhas * sizeof(long long));
+  int e,i,w,k,j;
+  int contador2=0, addict=0, adds=0;
+  int tempo1=0, tempo2=0, tempo3=0;
+  float tempo5=0;
+
+  for(i=0;i<num_pontos;i++){
+    viz[i] = i+1;
+  }
+
+  pontos2 = give_rand(2,num_pontos);
+
+  adds = pontos2-1;
+  do{
+    addict += adds;
+    adds--;
+  }while(adds != 0);
+
+  for(k=0;0==0;k++){
+    novoViz[k] = give_rand(1,num_pontos);
+    for(i = 0; i<num_pontos; i++){
+      if(novoViz[k] == viz[i]){
+        vizFinal[contador2] = novoViz[k];
+        viz[i] = -1;
+        contador2++;
+      }
+    }
+    if(contador2 == pontos2){
+      break;
+    }
+  }
+
+  printf("\n");
+  //novo array organizado
+  for(i=0; i<pontos2; i++){
+    for(j= 0; j<pontos2;j++){
+      if(vizFinal[i] < vizFinal[j]){
+        e = vizFinal[i];
+        vizFinal[i] = vizFinal[j];
+        vizFinal[j] = e;
+      }
+    }
+  }
+
+  struct item *vizinho = malloc((addict * num_pontos) * sizeof(item));
+
+  for(i=0;i<pontos2;i++){
+    for(j=0;j<pontos2;j++){
+      if(vizFinal[i] < vizFinal[j]){
+        tempo2 = (vizFinal[j]-vizFinal[i]);
+        for(k=vizFinal[i]-1;k>=1;k--){
+          tempo2 += (num_pontos-(k));
+        }
+        tempo1 = tempo2 - 1;
+        vizinho[tempo3].ponto1 = myItems[tempo1].ponto1;
+    	  vizinho[tempo3].ponto2 = myItems[tempo1].ponto2;
+        vizinho[tempo3].distanc = myItems[tempo1].distanc;
+        tempo3++;
+      }
+    }
+  }
+
+  tempo5 = dist_med(pontos2, addict, vizinho);
+
+  contador2=0;
+  addict=0;
+  adds=0;
+  free(vizinho);
+  return tempo5;
+}

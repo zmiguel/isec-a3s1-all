@@ -9,6 +9,7 @@ int itera=0, //nr de vezes que o ciclo principal vai correr, ietraçoes
     w=0,  // temporaria
     contador=0, // temporaria para contar pontos
     pontos=0, //nr pontos escolhidos
+    pontos2=0, //nr pontos escolhidos para a iteraçao vizinha
     temp1=0,  //temp1
     temp2=0,  //temp2
     temp3=0,  //temp3
@@ -23,11 +24,14 @@ long nr_linhas=0, //numero de linhas
      nr_comb=0; //numero de combinaçoes possiveis para os numeros selecionados
 
 
-char nome_fich[100]; // nome do ficheiro a abrir
+char nome_fich[100], // nome do ficheiro a abrir
+     save_file[250];
 
 
 float melhor=0, //melhor valor encontrado
-      temp4=0; //temp para guardar o melhor valor encontrado
+      temp4=0, //temp para guardar o melhor valor encontrado
+      temp5=0, // mais uma variave para guardar o melhor resultado
+      finalMelhor=0; //guarda o melhor valor no final de cada iteraçao
 
 
 bool runs = false, //check se foi dado nr de vezes a corrrer na linha de comandos

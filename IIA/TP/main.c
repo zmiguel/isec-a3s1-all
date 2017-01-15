@@ -9,8 +9,10 @@
 
 int main(int argc, char *argv[]){
     //setup random
-  time_t t;
+  time_t t, now = time(NULL);
+  char file_temp[50], iterachar[10];
   srand((unsigned)time(&t));
+  strftime(file_temp, 50, "%Y-%m-%d_%H-%M-%S", localtime(&now));
 
     //verificar argumentos de linha de commandos
   if(argc==2){
@@ -67,6 +69,15 @@ int main(int argc, char *argv[]){
   unsigned long long *melhorArr = malloc(nr_linhas * sizeof(long long));
   struct item *item = malloc(nr_linhas * sizeof(item));
 
+  strcat(save_file, "LOGFILE_");
+  strcat(save_file, file_temp);
+  strcat(save_file, "_File-");
+  strcat(save_file, nome_fich);
+  strcat(save_file, "_Itera-");
+  itoa(itera,iterachar,10);
+  strcat(save_file, iterachar);
+  strcat(save_file, ".txt");
+
   //ciclo para analisar dados
   for(ii=0;ii<itera;ii++){
 
@@ -100,13 +111,6 @@ int main(int argc, char *argv[]){
           break;
         }
       }
-      /*printf("Pontos escolhidos aleatoriamente:\n");
-      //mostra o novo array nao organizado
-      for(i=0; i<pontos; i++){
-        printf("%I64d ", auxi[i]);
-      }
-
-      printf("\n");*/
       printf("Nr pontos aleatorios: %d\n", contador);
       //novo array organizado
       for(i=0; i<pontos; i++){
@@ -118,11 +122,6 @@ int main(int argc, char *argv[]){
           }
         }
       }
-      //mostrar novo array auxi
-      /*for(i=0; i<pontos; i++){
-        printf("%I64d ", auxi[i]);
-      }*/
-      printf("sum: %d\n", nr_comb * nr_pontos);
       struct item *mySol = malloc((nr_comb * nr_pontos) * sizeof(item));
 
       guardaEstrutura(nome_fich, nr_linhas);
@@ -130,7 +129,6 @@ int main(int argc, char *argv[]){
       for(i=0;i<pontos;i++){
         for(j=0;j<pontos;j++){
             if(auxi[i] < auxi[j]){
-              //printf("(%I64d,%I64d)", auxi[i], auxi[j]);
               temp2 = (auxi[j]-auxi[i]);
 
               for(k=auxi[i]-1;k>=1;k--){
@@ -144,23 +142,43 @@ int main(int argc, char *argv[]){
               temp3++;
           }
         }
-        //printf("\n");
       }
-      /*for(i=0;i<nr_comb;i++){
-        printf("%d:\t %d %d %f\n", i+1, mySol[i].ponto1,mySol[i].ponto2,mySol[i].distanc);
-      }*/
       temp4 = dist_med(pontos, nr_comb, mySol);
       if(temp4 > melhor){
         melhor = temp4;
         melhor_nr = pontos;
         melhor_itera = ii+1;
+        finalMelhor = melhor;
+
+        printf("RESULTADO: %f\n", melhor);
+
         for(i=0; i<pontos; i++){
             melhorArr[i] = auxi[i];
         }
+
+      }else{
+        printf("Resultado %f Dispensavel.\nA realizar nova experiencia...\n", temp4);
+        temp5 = neighbour(nr_pontos, temp4, myItems);
+        printf("DISTANCIA MEDIA DO VIZINHO: %f\n", temp5);
       }
 
+      if(temp4 > temp5){
+        printf("EXPERIENCIA DE REPETICAO FOI DESNECESSARIA\n");
+        }else{
+          if(temp4 < temp5 && melhor > temp5){
+            printf("EXPERIENCIA MELHORADA MAS ABAIXO DO MELHOR\n");
+          }else{
+            if(temp5 > melhor);
+              printf("EXPERIENCIA MELHORADA E ACIMA DO MELHOR\n");
+              melhor = temp5;
+              finalMelhor = temp5;
+              melhor_itera = ii+1;
+            }
+          }
+
       printf("Distancia media para %d pontos, iteracao %d: %f\n", pontos, ii+1, temp4);
-      log("LOGFILE.txt", ii, pontos, nr_pontos, auxi, temp4);
+      printf("%s\n", save_file);
+      log(save_file, ii, pontos, nr_pontos, auxi, temp4);
       //reset tudo a zero
       free(mySol);
       pontos=0;
@@ -175,7 +193,7 @@ int main(int argc, char *argv[]){
   printf("RELATORIO DA EXPERIENCIA:\n\n");
   printf("MELHOR RESULTADO TEM %d NUMEROS \nVALOR DE DISTANCIA MEDIA %f \nOCORREU NA ITERACAO NUMERO: %d", melhor_nr, melhor, melhor_itera);
   printf("\nPONTOS DA MELHOR SOLUCAO: ");
-  log("LOGFILE.txt", -1, melhor_nr, nr_pontos, melhorArr, melhor);
+  log(save_file, -1, melhor_nr, nr_pontos, melhorArr, melhor);
   for(i=0; i<melhor_nr; i++){
     printf("%I64d ", melhorArr[i]);
   }
