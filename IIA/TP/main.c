@@ -170,7 +170,7 @@ int main(int argc, char *argv[]){
       }while(temp4 > temp5);
         if(melhor > temp5){
           printf("EXPERIENCIA MELHORADA MAS ABAIXO DO MELHOR\n");
-          melhor = temp5;
+          temp4 = temp5;
         }else{
           if(temp5 > melhor);
             printf("EXPERIENCIA MELHORADA E ACIMA DO MELHOR\n");
