@@ -63,8 +63,8 @@ int main(int argc, char *argv[]){
   //ler nr linhas ficheiro
   nr_linhas = init_dados(nome_fich);
 
-  struct item *item = malloc(nr_linhas * sizeof(item));
-  unsigned long long *melhorArr = malloc(nr_linhas * sizeof(long long));
+  struct item *item = malloc((nr_pontos * nr_linhas) * sizeof(long long));
+  unsigned long long *melhorArr = malloc((nr_pontos * nr_linhas) * sizeof(long long));
 
   strcat(save_file, "LOGFILE_");
   strcat(save_file, file_temp);
@@ -75,123 +75,133 @@ int main(int argc, char *argv[]){
   strcat(save_file, iterachar);
   strcat(save_file, ".txt");
 
-  guardaEstrutura(nome_fich, nr_linhas);
+  //guardaEstrutura(myItems, nome_fich, nr_linhas);
 
   //ciclo para analisar dados
   for(ii=0;ii<itera;ii++){
     //alocamento dinamico de arrays
     unsigned long long *str = malloc((nr_linhas * 2 ) * sizeof(long long));
-    unsigned long long *auxi = malloc((nr_linhas * 2 ) * sizeof(long long));
-    unsigned long long *novoArr = malloc((nr_linhas * 2 ) * sizeof(long long));
 
-      //array inicial
-      for(j=0;j<nr_pontos;j++){
-        str[j] = j+1;
-      }
-      //escolher aleatoriamente quantos numeros vao ser selecionados
-      pontos = give_rand(2,nr_pontos);
+    //array inicial
+    for(j=0;j<nr_pontos;j++){
+      str[j] = j+1;
+    }
+    //escolher aleatoriamente quantos numeros vao ser selecionados
+    pontos = give_rand(2,nr_pontos);
 
-      //descobrir o nr combinaçoes possiveis dentro dos numeros escolhidos
-      temp1 = pontos - 1;
-      for(nr_comb=0;temp1!=0;temp1--){
-        nr_comb += temp1;
-      }
+    //descobrir o nr combinaçoes possiveis dentro dos numeros escolhidos
+    temp1 = pontos - 1;
+    for(nr_comb=0;temp1!=0;temp1--){
+      nr_comb += temp1;
+    }
 
-      printf("\n"); // cenas
-      //cria array sem numeros aleatorios repetidos
-      for(k=0;0==0;k++){
-        p =  give_rand(1,nr_pontos);
-        novoArr[k] = p;
+    unsigned long long *auxi = malloc((nr_pontos * nr_linhas) * sizeof(long long));
+    unsigned long long *novoArr = malloc((nr_pontos * nr_linhas) * sizeof(long long));
 
-        for(a = 0; a<nr_pontos; a++){
-          if(novoArr[k] == str[a]){
-            auxi[contador] = novoArr[k];
-            str[a] = -1;
-            contador++;
-          }
-        }
-        if(contador == pontos){
-          break;
+    printf("\n"); // cenas
+    //cria array sem numeros aleatorios repetidos
+    for(k=0;0==0;k++){
+      p =  give_rand(1,nr_pontos);
+      novoArr[k] = p;
+
+      for(a = 0; a<nr_pontos; a++){
+        if(novoArr[k] == str[a]){
+          auxi[contador] = novoArr[k];
+          str[a] = -1;
+          contador++;
         }
       }
-      printf("Nr pontos aleatorios: %d\n", contador);
-      //novo array organizado
-      for(i=0; i<pontos; i++){
-        for(j= 0; j<pontos;j++){
+      if(contador == pontos){
+        break;
+      }
+    }
+    printf("Nr pontos aleatorios: %d\n", contador);
+    //novo array organizado
+    for(i=0; i<pontos; i++){
+      for(j= 0; j<pontos;j++){
+        if(auxi[i] < auxi[j]){
+          w = auxi[i];
+          auxi[i] = auxi[j];
+          auxi[j] = w;
+        }
+      }
+    }
+
+    struct_size = nr_linhas * nr_pontos * sizeof(item); //2147183647; //715725800; //nr_comb * sizeof(item);
+
+    printf("struct_size = %lld\n", struct_size);
+    struct item *myItems = malloc(struct_size);
+    struct item *mySol = malloc(struct_size);
+    guardaEstrutura(myItems, nome_fich, nr_linhas);
+
+    for(i=0;i<pontos;i++){
+      for(j=0;j<pontos;j++){
           if(auxi[i] < auxi[j]){
-            w = auxi[i];
-            auxi[i] = auxi[j];
-            auxi[j] = w;
-          }
-        }
-      }
-      struct item *mySol = malloc((nr_comb * nr_pontos * 2) * sizeof(item));
+            temp2 = (auxi[j]-auxi[i]);
 
-      //guardaEstrutura(nome_fich, nr_linhas);
-
-      for(i=0;i<pontos;i++){
-        for(j=0;j<pontos;j++){
-            if(auxi[i] < auxi[j]){
-              temp2 = (auxi[j]-auxi[i]);
-
-              for(k=auxi[i]-1;k>=1;k--){
-                temp2 += (nr_pontos-(k));
-              }
-
-              temp1 = temp2 - 1;
-              mySol[temp3].ponto1 = myItems[temp1].ponto1;
-      				mySol[temp3].ponto2 = myItems[temp1].ponto2;
-      				mySol[temp3].distanc = myItems[temp1].distanc;
-              temp3++;
-          }
-        }
-      }
-      temp4 = dist_med(pontos, nr_comb, mySol);
-      if(temp4 > melhor){
-        melhor = temp4;
-        melhor_nr = pontos;
-        melhor_itera = ii+1;
-        finalMelhor = melhor;
-
-        printf("RESULTADO: %f\n", melhor);
-
-        for(i=0; i<pontos; i++){
-            melhorArr[i] = auxi[i];
-        }
-
-      }else{
-        printf("Resultado %f Dispensavel.\nA realizar nova experiencia...\n", temp4);
-        temp5 = neighbour(nr_pontos, temp4, myItems);
-        printf("DISTANCIA MEDIA DO VIZINHO: %f\n", temp5);
-      }
-
-      if(temp4 > temp5){
-        printf("EXPERIENCIA DE REPETICAO FOI DESNECESSARIA\n");
-        }else{
-          if(temp4 < temp5 && melhor > temp5){
-            printf("EXPERIENCIA MELHORADA MAS ABAIXO DO MELHOR\n");
-          }else{
-            if(temp5 > melhor);
-              printf("EXPERIENCIA MELHORADA E ACIMA DO MELHOR\n");
-              melhor = temp5;
-              finalMelhor = temp5;
-              melhor_itera = ii+1;
+            for(k=auxi[i]-1;k>=1;k--){
+              temp2 += (nr_pontos-(k));
             }
-          }
 
-      printf("Distancia media para %d pontos, iteracao %d: %f\n", pontos, ii+1, temp4);
-      printf("%s\n", save_file);
-      log(save_file, ii, pontos, nr_pontos, auxi, temp4);
-      //reset tudo a zero
-      free(mySol);
-      free(auxi);
-      free(str);
-      pontos=0;
-      contador=0;
-      temp1=0;
-      temp2=0;
-      temp3=0;
-      temp4=0;
+            temp1 = temp2 - 1;
+            mySol[temp3].ponto1 = myItems[temp1].ponto1;
+    				mySol[temp3].ponto2 = myItems[temp1].ponto2;
+    				mySol[temp3].distanc = myItems[temp1].distanc;
+            temp3++;
+        }
+      }
+    }
+    temp4 = dist_med(pontos, nr_comb, mySol);
+    if(temp4 > melhor){
+      melhor = temp4;
+      melhor_nr = pontos;
+      melhor_itera = ii+1;
+      finalMelhor = melhor;
+
+      printf("RESULTADO: %f\n", melhor);
+
+      free(melhorArr);
+      unsigned long long *melhorArr = malloc((nr_pontos * nr_linhas) * sizeof(long long));
+
+      for(i=0; i<pontos; i++){
+          melhorArr[i] = auxi[i];
+      }
+
+    }else{
+      printf("Resultado %f Dispensavel.\nA realizar nova experiencia...\n", temp4);
+      do{
+        temp5 = neighbour(nr_pontos, temp4, myItems);
+      }while(temp4 > temp5);
+        if(melhor > temp5){
+          printf("EXPERIENCIA MELHORADA MAS ABAIXO DO MELHOR\n");
+          temp4 = temp5;
+        }else{
+          if(temp5 > melhor);
+            printf("EXPERIENCIA MELHORADA E ACIMA DO MELHOR\n");
+            melhor = temp5;
+            finalMelhor = temp5;
+            melhor_itera = ii+1;
+          }
+    }
+
+    printf("Distancia media para %d pontos, iteracao %d: %f\n", pontos, ii+1, temp4);
+    printf("%s\n", save_file);
+    log(save_file, ii, pontos, nr_pontos, auxi, temp4);
+    //reset tudo a zero
+    free(mySol);
+    free(myItems);
+    free(auxi);
+    free(novoArr);
+    mySol = NULL;
+    myItems = NULL;
+    auxi = NULL;
+    novoArr = NULL;
+    pontos=0;
+    contador=0;
+    temp1=0;
+    temp2=0;
+    temp3=0;
+    temp4=0;
   }
 
   printf("\n\n");

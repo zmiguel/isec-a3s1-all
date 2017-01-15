@@ -24,6 +24,9 @@ long nr_linhas=0, //numero de linhas
      nr_comb=0; //numero de combinaçoes possiveis para os numeros selecionados
 
 
+long long struct_size=0;
+
+
 char nome_fich[100], // nome do ficheiro a abrir
      save_file[250];
 

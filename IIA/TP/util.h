@@ -17,6 +17,6 @@ struct info init_data(char *s, int mat[][2]);
 
 int init_dados(char *nome);
 
-void guardaEstrutura(char *nome,int totalSol);
+void guardaEstrutura(struct item *myItems, char *nome, int totalSol);
 
 int random_l_h(int min, int max);

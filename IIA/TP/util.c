@@ -9,7 +9,7 @@ struct item {
    float distanc;
 };
 
-struct item myItems[2500000]; //tentei criar este array com alocação de memoria dinamica como os outros mas nao consegui :(
+//struct item myItems[2500000]; //tentei criar este array com alocação de memoria dinamica como os outros mas nao consegui :(
 
 int init_dados(char *nome){
 
@@ -43,7 +43,7 @@ int init_dados(char *nome){
 	return total_sol;
 }
 
-void guardaEstrutura(char *nome, int totalSol){
+void guardaEstrutura(struct item *myItems, char *nome, int totalSol){
   FILE *f;
 	int i=0;
   float dist;
@@ -119,11 +119,11 @@ void log(char *filename, int id_itera, int id_pontos, int total_pontos, long lon
 }
 
 float neighbour(int num_pontos, float temp, struct item *myItems){
-  struct item *item = malloc(nr_linhas * sizeof(item));
+  struct item *item = malloc((nr_pontos * nr_linhas) * sizeof(long long));
 
-  unsigned long long *viz = malloc(nr_linhas * sizeof(long long));
-  unsigned long long *novoViz = malloc(nr_linhas * sizeof(long long));
-  unsigned long long *vizFinal = malloc(nr_linhas * sizeof(long long));
+  unsigned long long *viz = malloc((nr_pontos * nr_linhas) * sizeof(long long));
+  unsigned long long *novoViz = malloc((nr_pontos * nr_linhas) * sizeof(long long));
+  unsigned long long *vizFinal = malloc((nr_pontos * nr_linhas) * sizeof(long long));
   int e,i,w,k,j;
   int contador2=0, addict=0, adds=0;
   int tempo1=0, tempo2=0, tempo3=0;
@@ -154,8 +154,6 @@ float neighbour(int num_pontos, float temp, struct item *myItems){
       break;
     }
   }
-
-  printf("\n");
   //novo array organizado
   for(i=0; i<pontos2; i++){
     for(j= 0; j<pontos2;j++){
@@ -167,7 +165,7 @@ float neighbour(int num_pontos, float temp, struct item *myItems){
     }
   }
 
-  struct item *vizinho = malloc((addict * num_pontos * 2) * sizeof(item));
+  struct item *vizinho = malloc(nr_linhas * nr_pontos * sizeof(item));
 
   for(i=0;i<pontos2;i++){
     for(j=0;j<pontos2;j++){
@@ -190,9 +188,17 @@ float neighbour(int num_pontos, float temp, struct item *myItems){
   contador2=0;
   addict=0;
   adds=0;
+  tempo1=0;
+  tempo2=0;
+  tempo3=0;
+  tempo5=0;
   free(vizinho);
   free(viz);
   free(vizFinal);
   free(novoViz);
+  vizinho = NULL;
+  viz = NULL;
+  vizFinal = NULL;
+  novoViz = NULL;
   return tempo5;
 }
